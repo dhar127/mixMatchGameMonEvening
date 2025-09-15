@@ -1,0 +1,6 @@
+{
+  "appId": "com.example.app",
+  "appName": "Mix and Match Contest for Budding Innovators",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}

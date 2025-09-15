@@ -1,0 +1,1129 @@
+/* Root Variables */
+:root {
+  --primary-blue: #3b82f6;
+  --dark-blue: #1e3a8a;
+  --light-blue: #93c5fd;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --white: #ffffff;
+  --light-gray: #f8fafc;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --shadow-heavy: rgba(0, 0, 0, 0.3);
+}
+
+/* APK Optimization - Prevent zoom on mobile devices */
+* {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+/* Re-enable text selection for specific elements that need it */
+input, textarea, .selectable-text {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Enhanced mobile touch handling */
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Body Styling - Fixed for all pages */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  overflow: auto;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  line-height: 1.6;
+}
+
+/* Main Background with Animated Gradient - Updated for all pages */
+.app-bg {
+  min-height: 100vh;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  position: relative;
+}
+
+/* Only apply overflow hidden to homepage */
+body:has(.main-container) {
+  overflow: auto !important;
+}
+
+body:has(.main-container) .app-bg {
+  overflow: auto !important;
+  max-height: 100vh !important;
+}
+
+/* Allow scrolling for other pages */
+body:has(.user-scores-container),
+body:has(.leaderboard-container) {
+  overflow: auto !important;
+}
+
+body:has(.user-scores-container) .app-bg,
+body:has(.leaderboard-container) .app-bg {
+  overflow: auto !important;
+  min-height: 100vh;
+  max-height: none !important;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Main Container - Updated for homepage only */
+.main-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.5rem;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: auto !important;
+  box-sizing: border-box;
+}
+
+/* ============ NAVIGATION STYLES ============ */
+
+/* Header Top Section - User Info and Language Toggle */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* User Info Styling */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-text {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(245, 101, 101, 0.3);
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
+}
+
+/* Language Toggle Button */
+.language-toggle-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.language-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.language-text {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.language-icon {
+  font-size: 0.9rem;
+}
+
+/* Navigation Menu */
+.navigation-menu {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  padding: 10px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-btn:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  text-decoration: none;
+}
+
+/* ============ ENHANCED HEADER STYLES ============ */
+
+/* Enhanced Header Container */
+.enhanced-header {
+  flex-shrink: 0;
+  margin-bottom: 0.8rem;
+}
+
+/* Extra Header - Logo Section */
+.extra-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 15px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 0.6rem;
+  min-height: 60px;
+}
+
+/* Logo Placeholders - Fixed sizing */
+.logo-placeholder {
+  flex-shrink: 0 !important;
+  width: 120px !important;
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.left-logo {
+  justify-content: flex-start;
+}
+
+.right-logo {
+  justify-content: flex-end;
+}
+
+/* Direct Logo Image Styling */
+.logo-image-direct {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+  display: block !important;
+}
+
+/* Hover effects for direct logo images */
+.logo-placeholder:hover .logo-image-direct {
+  transform: scale(1.1) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* Extra Header Content */
+.extra-header-content {
+  flex: 1;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.extra-title {
+  color: var(--white);
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+  margin: 0 0 0.3rem 0;
+  background: linear-gradient(45deg, #ffffff, #e0f2fe);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+
+.extra-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  font-weight: 500;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+/* Original Header Section */
+.header-section {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Title */
+.main-title {
+  color: var(--white);
+  font-size:  clamp(1rem, 2.5vw, 1.5rem); 
+  font-weight: 800;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.5rem;
+  animation: titlePulse 3s infinite, titleGlow 2s infinite;
+  background: linear-gradient(45deg, #ffffff, #f0f9ff, #dbeafe);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+.sub-title {
+  color: var(--white);
+  font-size: clamp(0.85rem, 2vw, 1.2rem); /* smaller than main-title */
+  font-weight: 500;
+  margin-top: 0.2rem; 
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
+  line-height: 1.3;
+  background: linear-gradient(45deg, #dbeafe, #f0f9ff, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+@keyframes titlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); }
+  50% { text-shadow: 2px 2px 20px rgba(255, 255, 255, 0.5); }
+}
+
+/* Game Selection Prompt */
+.game-selection-prompt {
+  font-weight: 700;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--white);
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 1.5rem;
+  border-radius: 40px;
+  display: inline-block;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  animation: promptPulse 2s infinite;
+  backdrop-filter: blur(5px);
+}
+
+@keyframes promptPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+/* ============ GAMES SECTION ============ */
+
+/* Games Section */
+.games-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  min-height: 50;
+  overflow: hidden;
+}
+
+/* Games Grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  max-width: 1200px;
+  width: 100%;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* Game Icon Container */
+.game-icon-container {
+  perspective: 1000px;
+  text-decoration: none;
+  height:150px;
+  width:100px;
+}
+
+/* Game Icon Styling */
+.game-icon {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(245, 240, 240, 0.916);
+  border-radius: 15px;
+  padding: 3rem 6rem;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(9, 1, 1, 0.925);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.game-icon:hover::before {
+  left: 100%;
+}
+
+.game-icon:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 1);
+  border-color: var(--primary-blue);
+}
+
+.game-icon:active {
+  transform: translateY(-5px) scale(0.98);
+}
+
+.game-icon span {
+  display: block;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.game-icon:hover span {
+  transform: scale(1.2) rotate(10deg);
+}
+
+.game-icon h3 {
+  color: #1f2937;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+  transition: color 0.3s ease;
+  line-height: 1.2;
+}
+
+.game-icon:hover h3 {
+  color: var(--primary-blue);
+}
+
+/* ============ TEAM MEMBERS SECTION - Optimized ============ */
+
+.team-members-section {
+  flex-shrink: 0;
+  margin: 0.4rem 0;
+  padding: 0;
+}
+
+.team-container {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.team-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.team-members,
+.team-mentor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.member-name,
+.mentor-name {
+  color: #ffffff;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  font-weight: 500;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ============ ENHANCED FOOTER STYLES ============ */
+
+
+
+
+/* ============ BACK BUTTON - Enhanced ============ */
+
+.back-btn {
+  position: fixed !important;
+  top: 20px !important;
+  left: 20px !important;
+  z-index: 10001 !important;
+  background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcf7f) !important;
+  background-size: 200% 200% !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 12px 20px !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+  border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  animation: backButtonPulse 2s infinite !important;
+  backdrop-filter: blur(10px) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 140px !important;
+}
+
+@keyframes backButtonPulse {
+  0%, 100% {
+    background-position: 0% 50%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.back-btn:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4) !important;
+  background-position: 100% 50% !important;
+  text-decoration: none !important;
+  color: white !important;
+}
+
+.back-btn:active {
+  transform: translateY(-1px) scale(0.98) !important;
+}
+
+.back-btn:visited {
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* ============ MODAL STYLES - FULLSCREEN for Games ============ */
+
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 10000 !important;
+  background: linear-gradient(135deg, 
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #f5576c 75%,
+    #4facfe 100%) !important;
+  background-size: 400% 400% !important;
+  animation: geographyGradientShift 12s ease infinite !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+
+@keyframes geographyGradientShift {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 100% 50%; }
+  50% { background-position: 50% 100%; }
+  75% { background-position: 0% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+.modal-content {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.game-fullscreen-wrapper {
+  flex: 1 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  position: relative !important;
+}
+
+.game-fullscreen-wrapper > * {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  animation: none !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* ============ COMPONENT ISOLATION - Prevent conflicts ============ */
+
+/* Ensure UserScores and Leaderboard components don't inherit homepage styles */
+.user-scores-container,
+.leaderboard-container {
+  /* Reset any inherited styles */
+  position: relative !important;
+  z-index: 1 !important;
+  max-width: none !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: auto !important;
+}
+
+/* Ensure these containers can scroll */
+.user-scores-container *,
+.leaderboard-container * {
+  position: relative !important;
+}
+
+/* Override any conflicting modal styles for scores/leaderboard pages */
+body:has(.user-scores-container) .modal-overlay,
+body:has(.leaderboard-container) .modal-overlay {
+  position: relative !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0.3rem;
+  }
+  
+  .header-top {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .navigation-menu {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  
+  .nav-btn {
+    width: 180px;
+    justify-content: center;
+  }
+  
+  .enhanced-header {
+    margin-bottom: 0.6rem;
+  }
+  
+  .extra-header {
+    padding: 0.6rem 0.8rem;
+    min-height: 50px;
+  }
+  
+  .logo-placeholder {
+    width: 90px !important;
+    height: 60px !important;
+  }
+  
+  .logo-image-direct {
+    border-radius: 4px !important;
+  }
+  
+  .extra-header-content {
+    padding: 0 0.5rem;
+  }
+  
+  .games-section {
+    padding: 0.4rem 0;
+  }
+  
+  .games-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.8rem;
+    padding: 0.8rem;
+  }
+  
+  .game-icon {
+    padding: 10rem 15rem;
+  }
+  
+  .game-icon span {
+    font-size: 1.8rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .game-icon h3 {
+    font-size: 0.75rem;
+  }
+  
+  .team-members-section {
+    margin: 0.3rem 0;
+  }
+  
+  .team-container {
+    padding: 0.5rem 0.8rem;
+    margin: 0 0.3rem;
+    border-radius: 10px;
+  }
+  
+  .team-content {
+    gap: 1rem;
+    flex-direction: column;
+  }
+  
+  .back-btn {
+    top: 15px !important;
+    left: 15px !important;
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    min-width: 120px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding: 0.2rem;
+  }
+  
+  .header-top {
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .welcome-text {
+    font-size: 0.8rem;
+  }
+  
+  .logout-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .language-toggle-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .nav-btn {
+    width: 160px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .extra-header {
+    padding: 0.5rem 0.6rem;
+    min-height: 45px;
+  }
+  
+  .logo-placeholder {
+    width: 75px !important;
+    height: 50px !important;
+  }
+  
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding: 0.6rem;
+  }
+  
+  .game-icon {
+    padding: 15rem 10rem;
+
+  }
+  
+  .game-icon span {
+   
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .game-icon h3 {
+    font-size: 0.7rem;
+    line-height: 1.1;
+  }
+  
+  .team-container {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+  }
+  
+  .team-content {
+    gap: 0.6rem;
+  }
+  
+  .back-btn {
+    top: 12px !important;
+    left: 12px !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    min-width: 110px !important;
+  }
+}
+
+/* Touch Scroll Enhancements - Add these styles to your App.css */
+
+/* Base touch scroll container */
+.touch-scroll-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Enhanced scrollbars for desktop while maintaining touch functionality */
+.touch-scroll-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.touch-scroll-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.touch-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.touch-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Main app container enhancements */
+.app-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Games grid wrapper for horizontal scrolling */
+.games-grid-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 0;
+}
+
+.games-grid-wrapper .games-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  padding: 0 20px;
+  min-width: max-content;
+}
+
+/* Game icons responsive behavior */
+.game-icon-container {
+  flex-shrink: 0;
+  min-width: 150px;
+  text-align: center;
+}
+
+/* Main container scrolling */
+.main-container {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Modal content scrolling */
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 8px;
+}
+
+.game-fullscreen-wrapper {
+  min-height: 100%;
+  position: relative;
+}
+
+/* Smooth scrolling animations */
+@keyframes smoothScroll {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.touch-scroll-container > * {
+  animation: smoothScroll 0.3s ease-out;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  .games-grid-wrapper {
+    padding: 5px 0;
+  }
+  
+  .games-grid-wrapper .games-grid {
+    gap: 15px;
+    padding: 0 15px;
+  }
+  
+  .game-icon-container {
+    min-width: 120px;
+  }
+  
+  /* Hide scrollbars on mobile for cleaner look */
+  .touch-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .touch-scroll-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Touch feedback for interactive elements */
+.game-icon-container:active,
+.nav-btn:active,
+.back-btn:active,
+.language-toggle-btn:active,
+.logout-btn:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+/* Prevent text selection during touch scrolling */
+.touch-scroll-container * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection for specific content */
+.team-content *,
+.welcome-text,
+.main-title,
+.extra-title,
+.extra-subtitle {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Performance optimizations for smooth scrolling */
+.touch-scroll-container {
+  will-change: scroll-position;
+  transform: translate3d(0, 0, 0); /* Enable hardware acceleration */
+}
+
+/* Bounce effect indicators */
+.touch-scroll-container::before,
+.touch-scroll-container::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.touch-scroll-container::before {
+  top: 0;
+}
+
+.touch-scroll-container::after {
+  bottom: 0;
+}
+
+/* Show indicators when at scroll boundaries */
+.touch-scroll-container:hover::before,
+.touch-scroll-container:hover::after {
+  opacity: 1;
+}
+
+/* Additional mobile optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Mobile device optimizations */
+  .touch-scroll-container {
+    scroll-snap-type: y proximity;
+  }
+  
+  .games-grid-wrapper {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .game-icon-container {
+    scroll-snap-align: center;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .touch-scroll-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .touch-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .touch-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .touch-scroll-container::-webkit-scrollbar-thumb {
+    background: currentColor;
+    opacity: 0.8;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .touch-scroll-container {
+    scroll-behavior: auto;
+  }
+  
+  .touch-scroll-container > * {
+    animation: none;
+  }
+  
+  .game-icon-container:active,
+  .nav-btn:active,
+  .back-btn:active,
+  .language-toggle-btn:active,
+  .logout-btn:active {
+    transform: none;
+    transition: none;
+  }
+}
