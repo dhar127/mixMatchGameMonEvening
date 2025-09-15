@@ -1,4 +1,24 @@
-.scrollable{
-  overflow: auto; 
+.scrollable {
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  position: relative;
+}
+
+/* Mobile specific enhancements */
+@media (max-width: 768px) {
+  .scrollable {
+    height: 100vh;
+    height: 100dvh; /* Use dynamic viewport height on mobile */
+    overflow-x: hidden;
+    overflow-y: scroll; /* Force scroll on mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
+  }
 }

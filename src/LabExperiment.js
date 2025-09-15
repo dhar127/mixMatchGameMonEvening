@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as THREE from 'three';
+import ScrollableContainer from './Scroll';
 import './LabExperiment.css';
 
 const LabExperiment = () => {
@@ -780,36 +781,38 @@ const LabExperiment = () => {
 
   // Render functions
   const renderIndexPage = () => (
-    <div className="index-page">
-      <div className="main-header">
-        <button 
-          className="language-toggle"
-          onClick={toggleLanguage}
-        >
-          {t.language}
-        </button>
-        <h1>{t.mainTitle}</h1>
-        <p>{t.mainSubtitle}</p>
-        <p>{t.mainDescription}</p>
-      </div>
-      
-      <div className="experiments-grid">
-        {Object.entries(t.experiments).map(([key, experiment]) => (
-          <div 
-            key={key}
-            className="experiment-card"
-            onClick={() => openExperiment(key)}
+    <ScrollableContainer>
+      <div className="index-page">
+        <div className="main-header">
+          <button 
+            className="language-toggle"
+            onClick={toggleLanguage}
           >
-            <span className="experiment-icon">{experiment.icon}</span>
-            <h3>{experiment.title}</h3>
-            <p>{experiment.description}</p>
-            <span className={`difficulty-badge ${experiment.difficulty.toLowerCase()}`}>
-              {experiment.difficulty}
-            </span>
-          </div>
-        ))}
+            {t.language}
+          </button>
+          <h1>{t.mainTitle}</h1>
+          <p>{t.mainSubtitle}</p>
+          <p>{t.mainDescription}</p>
+        </div>
+        
+        <div className="experiments-grid">
+          {Object.entries(t.experiments).map(([key, experiment]) => (
+            <div 
+              key={key}
+              className="experiment-card"
+              onClick={() => openExperiment(key)}
+            >
+              <span className="experiment-icon">{experiment.icon}</span>
+              <h3>{experiment.title}</h3>
+              <p>{experiment.description}</p>
+              <span className={`difficulty-badge ${experiment.difficulty.toLowerCase()}`}>
+                {experiment.difficulty}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </ScrollableContainer>
   );
 
   const renderVolcanoPractice = () => (
@@ -1109,32 +1112,34 @@ const LabExperiment = () => {
 
   if (currentView === "experiment" && selectedExperiment) {
     return (
-      <div className="experiment-page active">
-        <div className="experiment-header">
-          <button 
-           className="back-button"
-            onClick={goToIndex}
-          >
-            {t.backToLab}
-          </button>
-          <button 
-            className="language-toggle"
-            onClick={toggleLanguage}
-             
-          >
-            {t.language}
-          </button>
-          <h1>{t.experiments[selectedExperiment].title}</h1>
-          <p>{t.experiments[selectedExperiment].subtitle}</p>
-        </div>
+      <ScrollableContainer>
+        <div className="experiment-page active">
+          <div className="experiment-header">
+            <button 
+             className="back-button"
+              onClick={goToIndex}
+            >
+              {t.backToLab}
+            </button>
+            <button 
+              className="language-toggle"
+              onClick={toggleLanguage}
+               
+            >
+              {t.language}
+            </button>
+            <h1>{t.experiments[selectedExperiment].title}</h1>
+            <p>{t.experiments[selectedExperiment].subtitle}</p>
+          </div>
 
-        <div>
-          {selectedExperiment === 'volcano' && renderVolcanoPractice()}
-          {selectedExperiment === 'hookes' && renderHookesPractice()}
-          {selectedExperiment === 'ohms' && renderOhmsPractice()}
-          {selectedExperiment === 'pendulum' && renderPendulumPractice()}
+          <div>
+            {selectedExperiment === 'volcano' && renderVolcanoPractice()}
+            {selectedExperiment === 'hookes' && renderHookesPractice()}
+            {selectedExperiment === 'ohms' && renderOhmsPractice()}
+            {selectedExperiment === 'pendulum' && renderPendulumPractice()}
+          </div>
         </div>
-      </div>
+      </ScrollableContainer>
     );
   }
 

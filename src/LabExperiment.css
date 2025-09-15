@@ -29,10 +29,7 @@ body {
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    /* Enable scrolling for index page like map */
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    /* Remove overflow constraints - let ScrollableContainer handle it */
 }
 
 .main-header {
@@ -178,23 +175,19 @@ body {
     color: white;
 }
 
-/* EXPERIMENT PAGE - FIXED SCROLLING LIKE MAP CSS */
+/* EXPERIMENT PAGE - OPTIMIZED FOR SCROLLABLE CONTAINER */
 .experiment-page {
-    min-height: 100vh; /* Changed from height to min-height */
+    min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     display: flex;
-    /* CRITICAL SCROLLING FIXES - Copy from map CSS */
-    overflow-x: hidden; /* Only prevent horizontal scrolling */
-    overflow-y: auto; /* Allow vertical scrolling */
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    position: static; /* Changed from relative to static */
     flex-direction: column;
+    position: relative;
+    /* Remove overflow constraints - let ScrollableContainer handle it */
 }
 
 .experiment-page.active {
-    display: flex; /* Changed to flex for better layout */
+    display: flex;
     flex-direction: column;
 }
 
@@ -247,15 +240,14 @@ body {
     transform: translateY(-50%);
 }
 
-/* MAIN CONTENT SECTION - ENHANCED SCROLLING */
+/* MAIN CONTENT SECTION - OPTIMIZED FOR SCROLLABLE CONTAINER */
 .content-section {
     padding: 20px;
-    display: flex; /* Changed from display: none */
+    display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Changed from overflow: visible */
-    -webkit-overflow-scrolling: touch;
     padding-bottom: 60px;
     flex: 1;
+    /* Remove overflow constraints - let ScrollableContainer handle it */
 }
 
 .content-section.active {
@@ -263,13 +255,10 @@ body {
     flex-direction: column;
 }
 
-/* Enhanced scrolling wrapper - like map CSS */
+/* Enhanced scrolling wrapper - work with ScrollableContainer */
 .scroll-container {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    overscroll-behavior: contain;
     flex: 1;
-    overflow: visible;
+    /* Remove overflow constraints - let ScrollableContainer handle it */
 }
 
 .content-wrapper {
@@ -1019,4 +1008,82 @@ html {
 
 .scroll-indicator:hover::after {
     opacity: 1;
+}
+
+/* MOBILE SCROLLING ENHANCEMENTS */
+@media (max-width: 768px) {
+    /* Ensure body allows scrolling on mobile */
+    body {
+        overflow: auto !important;
+        height: auto !important;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Mobile-specific scroll fixes */
+    .index-page, .experiment-page {
+        min-height: 100vh;
+        min-height: 100dvh; /* Use dynamic viewport height */
+        height: auto;
+        overflow: visible;
+    }
+    
+    /* Ensure experiment content is scrollable on mobile */
+    .experiments-grid {
+        padding: 20px;
+        gap: 20px;
+        /* Add extra padding for mobile scrolling */
+        padding-bottom: 80px;
+    }
+    
+    /* Mobile-specific lab container adjustments */
+    .lab-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding-bottom: 80px;
+    }
+    
+    /* Mobile canvas adjustments */
+    .lab-canvas {
+        width: 100%;
+        height: 300px;
+        max-height: 300px;
+    }
+    
+    /* Controls panel mobile adjustments */
+    .controls-panel {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .control-button {
+        flex: 1;
+        min-width: 120px;
+        font-size: 0.9em;
+        padding: 12px;
+    }
+    
+    /* Observations mobile adjustments */
+    .observations-section {
+        margin-bottom: 30px;
+    }
+    
+    .observations-section textarea {
+        height: 100px;
+        font-size: 14px;
+    }
+    
+    /* Progress indicators mobile */
+    .progress-section {
+        margin-bottom: 30px;
+    }
+    
+    /* Ensure scroll works with touch */
+    .experiment-header {
+        position: relative;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
 }
