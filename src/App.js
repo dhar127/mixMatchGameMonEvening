@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import "./App.css";
 import { UserProvider, useUser } from "./UserContext";
@@ -19,6 +19,7 @@ import Leaderboard from './Leaderboard';
 // Import logo images
 import Logo1 from './assets/Logo1.png';
 import Logo2 from './assets/Logo2.png';
+
 const useTouchScroll = (containerRef, options = {}) => {
   const {
     scrollSpeed = 1,
@@ -430,8 +431,6 @@ const TeamMembersSection = () => {
   );
 };
 
-
-
 const Home = () => (
   <div className="main-container">
     <EnhancedHeader />
@@ -439,14 +438,18 @@ const Home = () => (
       <GameSelection />
     </div>
     <TeamMembersSection />
-   <ScrollableContainer/>
+    <ScrollableContainer/>
   </div>
 );
 
 const GameWrapper = ({ children }) => (
   <div className="modal-overlay">
     <div className="modal-content">
-      <div className="game-fullscreen-wrapper">{children}</div>
+      <div className="game-fullscreen-wrapper">
+        <ScrollableContainer>
+          {children}
+        </ScrollableContainer>
+      </div>
     </div>
   </div>
 );
@@ -454,6 +457,23 @@ const GameWrapper = ({ children }) => (
 /* ---------------- ROUTES ---------------- */
 const AppRoutes = () => {
   const { user } = useUser();
+
+  // Body overflow control for modal
+  useEffect(() => {
+    const isGameRoute = ['/mathQuiz', '/wordGame', '/scienceQuiz', '/labExperiments', '/GeographyMapping'].includes(window.location.pathname);
+    
+    if (isGameRoute) {
+      document.body.style.overflow = 'auto';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   if (!user) {
     return <UserEntry />;
   }
@@ -488,6 +508,6 @@ function App() {
     </UserProvider>
   );
 }
-export { TouchScrollWrapper, useTouchScroll };
 
+export { TouchScrollWrapper, useTouchScroll };
 export default App;

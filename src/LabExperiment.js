@@ -813,7 +813,8 @@ const LabExperiment = () => {
   );
 
   const renderVolcanoPractice = () => (
-    <div className="content-section active">
+    <div className="content-section active scroll-container">
+    <div className="content-wrapper">
       <div className="lab-container">
         <canvas 
           ref={volcanoCanvasRef} 
@@ -854,6 +855,7 @@ const LabExperiment = () => {
           <h4>{t.observations.title}</h4>
           <div style={{ whiteSpace: 'pre-line', fontSize: '1.1em' }}>{volcanoObservations}</div>
         </div>
+      </div>
       </div>
     </div>
   );

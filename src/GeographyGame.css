@@ -5,28 +5,31 @@
   box-sizing: border-box;
 }
 
+/* FIXED: Allow proper scrolling */
 html {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  /* REMOVED: overflow: hidden; */
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden; /* Prevent body scrolling */
-  height: 100vh;
+  /* REMOVED: overflow: hidden; - This was preventing scrolling */
+  min-height: 100vh; /* Changed from height to min-height */
 }
 
-/* Game Container */
+/* FIXED: Game Container - Allow scrolling when content overflows */
 .game-container {
-  height: 100vh;
+  min-height: 100vh; /* Changed from height to min-height */
   width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  /* REMOVED: overflow: hidden; */
+  overflow-x: hidden; /* Only prevent horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
 /* Menu Screen */
@@ -35,8 +38,9 @@ body {
   padding: 1rem;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh; /* Changed from height to min-height */
+  overflow-x: hidden; /* Only prevent horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling when needed */
   display: flex;
 }
 
@@ -45,10 +49,11 @@ body {
   width: 100%;
   text-align: center;
   position: relative;
-  height: 100%;
+  min-height: 100%; /* Changed from height */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 2rem 0; /* Add some padding for better mobile spacing */
 }
 
 .language-toggle {
@@ -65,6 +70,7 @@ body {
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  z-index: 100; /* Ensure it stays on top */
 }
 
 .language-toggle:hover {
@@ -155,18 +161,19 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Complete Screen */
-.complete-screen {
+/* Complete Screen - FIXED */
+.completed-screen {
   background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Changed from center to flex-start */
   padding: 1rem;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh; /* Changed from height to min-height */
+  overflow-x: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
   display: flex;
 }
 
-.complete-content {
+.completion-wrapper {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   border-radius: 25px;
@@ -175,21 +182,24 @@ body {
   max-width: 500px;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: auto; /* Center vertically and horizontally */
+  max-height: 90vh; /* Limit height to allow scrolling */
+  overflow-y: auto; /* Allow scrolling within the wrapper if needed */
 }
 
-.complete-title {
+.completion-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.completion-title {
   font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 800;
   color: white;
   margin-bottom: 1.5rem;
 }
 
-.trophy-icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-}
-
-.final-score {
+.completion-score {
   font-size: 1.8rem;
   color: white;
   margin-bottom: 0.8rem;
@@ -237,12 +247,13 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Playing Screen */
+/* Playing Screen - FIXED */
 .playing-screen {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 0.8rem;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh; /* Changed from height to min-height */
+  overflow-x: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
   display: flex;
 }
 
@@ -260,7 +271,7 @@ body {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  height: calc(100vh - 1.6rem);
+  min-height: calc(100vh - 1.6rem); /* Changed from height to min-height */
   display: flex;
   flex-direction: column;
 }
@@ -314,7 +325,7 @@ body {
   gap: 1.2rem;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
 }
 
 /* Sidebar */
@@ -324,7 +335,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
 }
 
 .stats-container {
@@ -384,7 +395,7 @@ body {
   padding: 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   flex: 1;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
   display: flex;
   flex-direction: column;
 }
@@ -425,7 +436,7 @@ body {
 .map-area {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
   display: flex;
   flex-direction: column;
 }
@@ -434,7 +445,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
 }
 
 .map-container {
@@ -448,10 +459,16 @@ body {
   background-size: contain !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
-  overflow: visible;
+  overflow: visible; /* Keep as visible for map interactions */
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.map-display {
+  /* Ensure map display can handle touch events and scrolling properly */
+  touch-action: manipulation;
+  overflow: visible;
 }
 
 .map-overlay {
@@ -626,7 +643,7 @@ body {
   cursor: grabbing !important;
 }
 
-/* Mobile Responsive Styles */
+/* Mobile Responsive Styles - ENHANCED WITH SCROLLING */
 @media (max-width: 1024px) {
   .sidebar {
     width: 240px;
@@ -654,10 +671,11 @@ body {
 @media (max-width: 768px) {
   .playing-screen {
     padding: 0.4rem;
+    overflow-y: auto; /* Ensure scrolling on mobile */
   }
   
   .game-wrapper {
-    height: calc(100vh - 0.8rem);
+    min-height: calc(100vh - 0.8rem); /* Changed from height to min-height */
   }
   
   .game-header {
@@ -673,6 +691,7 @@ body {
   .game-content {
     flex-direction: column;
     gap: 0.8rem;
+    overflow: visible; /* Allow content to be visible */
   }
   
   .sidebar {
@@ -680,6 +699,7 @@ body {
     order: 1;
     flex-shrink: 0;
     gap: 0.6rem;
+    overflow: visible; /* Allow sidebar content to be scrollable */
   }
   
   .stats-container {
@@ -703,6 +723,7 @@ body {
   .drag-container {
     padding: 0.8rem;
     min-height: 80px;
+    overflow: visible; /* Allow drag container to show content */
   }
   
   .drag-title {
@@ -719,7 +740,8 @@ body {
   .map-area {
     order: 2;
     flex: 1;
-    min-height: 0;
+    min-height: 250px; /* Ensure minimum height */
+    overflow: visible; /* Allow map to be fully visible */
   }
   
   .map-container {
@@ -763,6 +785,11 @@ body {
 @media (max-width: 480px) {
   .menu-screen {
     padding: 0.8rem;
+    overflow-y: auto; /* Allow menu to scroll on very small screens */
+  }
+  
+  .menu-content {
+    padding: 1rem 0; /* Add padding for better spacing */
   }
   
   .language-toggle {
@@ -802,23 +829,26 @@ body {
     font-size: 2.5rem;
   }
   
-  .complete-screen {
+  .completed-screen {
     padding: 0.8rem;
+    overflow-y: auto; /* Allow completion screen to scroll */
   }
   
-  .complete-content {
+  .completion-wrapper {
     padding: 1.5rem;
+    margin: 1rem auto; /* Add margin for better spacing */
+    max-height: none; /* Remove max-height restriction on small screens */
   }
   
-  .complete-title {
+  .completion-title {
     font-size: 1.6rem;
   }
   
-  .trophy-icon {
+  .completion-icon {
     font-size: 3.5rem;
   }
   
-  .final-score {
+  .completion-score {
     font-size: 1.4rem;
   }
   
@@ -860,7 +890,6 @@ body {
   .stat-title {
     font-size: 0.7rem;
   }
-  
   .stat-value {
     font-size: 1.2rem;
   }
@@ -904,11 +933,11 @@ body {
     margin-top: 0.5rem;
   }
 }
-
 /* Landscape orientation adjustments for mobile */
 @media (max-width: 768px) and (orientation: landscape) and (max-height: 500px) {
   .game-content {
     flex-direction: row;
+    overflow-y: auto; /* Allow scrolling in landscape */
   }
   
   .sidebar {
@@ -933,9 +962,17 @@ body {
     background-size: contain !important;
   }
 }
-
 /* Touch-friendly enhancements */
 @media (hover: none) and (pointer: coarse) {
+  /* Ensure body can scroll on touch devices */
+  body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .game-container {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
   .drag-item {
     cursor: grab;
     -webkit-user-select: none;
@@ -1091,7 +1128,8 @@ html {
   font-size: 1rem;
   font-weight: 600;
 }
-/* Add these CSS animations to your stylesheet */
+
+/* Add these CSS animations */
 @keyframes dragPulse {
   0%, 100% { 
     transform: scale(1); 
@@ -1116,5 +1154,39 @@ html {
   50% { 
     transform: translateX(-50%) translateY(5px); 
     opacity: 1;
+  }
+}
+
+/* ADDITIONAL: Drag visual styling for mobile */
+.drag-visual {
+  position: fixed;
+  background: rgba(139, 116, 237, 0.9);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 1000;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+
+/* Ensure proper scrolling on all touch devices */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific fixes */
+  .game-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+  }
+  
+  .menu-screen,
+  .playing-screen,
+  .completed-screen {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  body {
+    -webkit-overflow-scrolling: touch;
   }
 }
