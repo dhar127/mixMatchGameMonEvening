@@ -1320,3 +1320,78 @@ body:has(.leaderboard-container) .modal-overlay {
     transition: none;
   }
 }
+/* Add these performance optimizations to your existing App.css */
+
+/* Hardware acceleration for better performance on TV */
+.game-icon,
+.nav-btn,
+.language-toggle-btn,
+.back-btn,
+.logout-btn {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize animations for TV */
+.game-icon:hover,
+.nav-btn:hover,
+.language-toggle-btn:hover {
+  transform: translateZ(0) scale(1.05);
+  transition: transform 0.2s ease-out;
+}
+
+/* Reduce repaints */
+.enhanced-header,
+.team-members-section,
+.games-section {
+  contain: layout style paint;
+}
+
+/* Optimize images for faster loading */
+.logo-image-direct {
+  image-rendering: optimizeSpeed;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  transform: translateZ(0);
+}
+
+/* Improve scroll performance */
+.touch-scroll-container {
+  contain: layout style paint;
+  will-change: scroll-position;
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+  font-size: 18px;
+  color: #666;
+  animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 1; }
+  to { opacity: 0.6; }
+}
+
+/* Reduce complexity for low-powered devices */
+@media (max-width: 768px) {
+  .game-icon:hover {
+    transform: none; /* Remove hover effects on mobile/TV */
+  }
+  
+  .enhanced-header {
+    contain: strict;
+  }
+}
+
+/* TV-specific optimizations */
+@media (min-width: 1920px) {
+  * {
+    transform: translateZ(0); /* Force hardware acceleration */
+  }
+  
+  .main-container {
+    contain: layout style paint;
+  }
+}
