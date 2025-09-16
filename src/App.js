@@ -383,10 +383,11 @@ const GameIcon = memo(({ emoji, titleKey, to }) => {
 const GameSelection = memo(() => (
   <div className="games-grid">
     <GameIcon emoji="🔬" titleKey="scienceQuiz" to="/scienceQuiz" />
-    <GameIcon emoji="🗺" titleKey="geographyMapping" to="/GeographyMapping" />
+   
     <GameIcon emoji="🧪" titleKey="labExperiments" to="/labExperiments" />
     <GameIcon emoji="🔤" titleKey="wordGuessGame" to="/wordGame" />
     <GameIcon emoji="➕" titleKey="mathQuiz" to="/mathQuiz" />
+     <GameIcon emoji="🗺" titleKey="geographyMapping" to="/GeographyMapping" />
   </div>
 ));
 

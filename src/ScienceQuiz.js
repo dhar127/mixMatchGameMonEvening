@@ -1176,7 +1176,7 @@ const ScienceQuiz = () => {
   const [matches, setMatches] = useState({});
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(45);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [feedback, setFeedback] = useState({});
@@ -1210,7 +1210,7 @@ const ScienceQuiz = () => {
     setScore(0);
     setMatches({});
     setSelectedLeft(null);
-    setTimeLeft(15);
+    setTimeLeft(40);
     setGameState('playing');
     setShowResults(false);
     setFeedback({});
@@ -1370,7 +1370,7 @@ const ScienceQuiz = () => {
     setMatches({});
     setSelectedLeft(null);
     setScore(0);
-    setTimeLeft(30);
+    setTimeLeft(40);
     setShowConfetti(false);
     setShowResults(false);
     setFeedback({});
@@ -1407,7 +1407,7 @@ const ScienceQuiz = () => {
               <div key={level} className={`level-card ${info.color}`}>
                 <div className="level-icon">{info.icon}</div>
                 <h3>Level {level.slice(-1)}: Classes {info[language]}</h3>
-                <p>10 Questions • 15s each</p>
+                <p>10 Questions • 40s each</p>
                 <button onClick={() => startGame(level)} className="btn btn-primary">
                   Start Quiz →
                 </button>
