@@ -864,89 +864,95 @@ const LabExperiment = () => {
   );
 
   const renderHookesPractice = () => (
-    <div className="content-section active">
-      <div className="lab-container">
-        <canvas 
-          ref={hookesCanvasRef} 
-          className="lab-canvas"
-        ></canvas>
+  <div className="content-section active">
+    <div className="lab-container">
+      <canvas 
+        ref={hookesCanvasRef} 
+        className="lab-canvas"
+      ></canvas>
 
-        {showWeightDisplay && (
-          <div className="weight-display">
-            {t.observations.currentLoad}: {hookesCurrentLoad}g | {t.observations.extension}: {hookesCurrentExtension.toFixed(1)}cm
-          </div>
-        )}
-
-        <div className="controls-panel">
-          <button 
-            className={`control-button ${hookesButtons.setup ? 'disabled' : ''}`}
-            onClick={setupSpring}
-            disabled={hookesButtons.setup}
-          >
-            {t.buttons.setupSpring}
-          </button>
-          <button 
-            className={`control-button ${hookesButtons.measureNatural ? 'disabled' : ''}`}
-            onClick={measureNaturalLength}
-            disabled={hookesButtons.measureNatural}
-          >
-            {t.buttons.measureNatural}
-          </button>
-          <button 
-            className={`control-button ${hookesButtons.addWeight ? 'disabled' : ''}`}
-            onClick={addWeight}
-            disabled={hookesButtons.addWeight}
-          >
-            {t.buttons.addWeight}
-          </button>
-          <button 
-            className={`control-button ${hookesButtons.measureExtension ? 'disabled' : ''}`}
-            onClick={measureExtension}
-            disabled={hookesButtons.measureExtension}
-          >
-            {t.buttons.measureExtension}
-          </button>
-          <button 
-            className="control-button"
-            onClick={resetHookesExperiment}
-          >
-            {t.buttons.reset}
-          </button>
+      {showWeightDisplay && (
+        <div className="weight-display">
+          {t.observations.currentLoad}: {hookesCurrentLoad}g | {t.observations.extension}: {hookesCurrentExtension.toFixed(1)}cm
         </div>
+      )}
 
-        {showMeasurementTable && (
-          <div className="measurements-table">
-            <h4>{t.observations.measurements}</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>{language === "en" ? "Weight (g)" : "எடை (கி)"}</th>
-                  <th>{language === "en" ? "Force (N)" : "விசை (N)"}</th>
-                  <th>{language === "en" ? "Extension (cm)" : "நீட்சி (செமீ)"}</th>
-                  <th>{language === "en" ? "k = F/x (N/m)" : "k = F/x (N/m)"}</th>
+      <div className="controls-panel">
+        <button 
+          className={`control-button ${hookesButtons.setup ? 'disabled' : ''}`}
+          onClick={setupSpring}
+          disabled={hookesButtons.setup}
+        >
+          {t.buttons.setupSpring}
+        </button>
+
+        <button 
+          className={`control-button ${hookesButtons.measureNatural ? 'disabled' : ''}`}
+          onClick={measureNaturalLength}
+          disabled={hookesButtons.measureNatural}
+        >
+          {t.buttons.measureNatural}
+        </button>
+
+        <button 
+          className={`control-button ${hookesButtons.addWeight ? 'disabled' : ''}`}
+          onClick={addWeight}
+          disabled={hookesButtons.addWeight}
+        >
+          {t.buttons.addWeight}
+        </button>
+
+        <button 
+          className={`control-button ${hookesButtons.measureExtension ? 'disabled' : ''}`}
+          onClick={measureExtension}
+          disabled={hookesButtons.measureExtension}
+        >
+          {t.buttons.measureExtension}
+        </button>
+
+        <button 
+          className="control-button"
+          onClick={resetHookesExperiment}
+        >
+          {t.buttons.reset}
+        </button>
+      </div>
+
+      {showMeasurementTable && (
+        <div className="measurements-table">
+          <h4>{t.observations.measurements}</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>{language === "en" ? "Weight (g)" : "எடை (கி)"}</th>
+                <th>{language === "en" ? "Force (N)" : "விசை (N)"}</th>
+                <th>{language === "en" ? "Extension (cm)" : "நீட்சி (செமீ)"}</th>
+                <th>{language === "en" ? "k = F/x (N/m)" : "k = F/x (N/m)"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {hookesMeasurements.map((measurement, index) => (
+                <tr key={index}>
+                  <td>{measurement.weight}</td>
+                  <td>{measurement.force}</td>
+                  <td>{measurement.extension}</td>
+                  <td>{measurement.springConstant}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {hookesMeasurements.map((measurement, index) => (
-                  <tr key={index}>
-                    <td>{measurement.weight}</td>
-                    <td>{measurement.force}</td>
-                    <td>{measurement.extension}</td>
-                    <td>{measurement.springConstant}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-        <div className="observation-panel">
-          <h4>{t.observations.title}</h4>
-          <div style={{ whiteSpace: 'pre-line', fontSize: '1.1em' }}>{hookesObservations}</div>
+      <div className="observation-panel">
+        <h4>{t.observations.title}</h4>
+        <div style={{ whiteSpace: 'pre-line', fontSize: '1.1em' }}>
+          {hookesObservations}
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 
   const renderOhmsPractice = () => (
     <div className="content-section active">
@@ -1036,10 +1042,11 @@ const LabExperiment = () => {
           <div style={{ position: 'absolute', top: '24px', left: '50%', transformOrigin: 'top', transform: 'translateX(-50%)' }}>
             <div 
               className="pendulum-string"
-              style={`{ 
-                '--pendulum-angle': ${pendulumAngle}deg,
-                transform: rotate(${pendulumAngle}deg)
-              }`}
+             style={{ 
+  '--pendulum-angle': `${pendulumAngle}deg`,
+  transform: `rotate(${pendulumAngle}deg)`
+}}
+
             >
               {/* Pendulum Bob */}
               <div className="pendulum-bob"></div>
@@ -1065,7 +1072,7 @@ const LabExperiment = () => {
             className={`control-button ${pendulumSwinging ? 'disabled' : ''}`}
             onClick={startPendulum}
             disabled={pendulumSwinging}
-          >
+    >
             {t.buttons.startSwinging}
           </button>
           <button 
@@ -1092,8 +1099,8 @@ const LabExperiment = () => {
           <h4>{t.observations.measurements}</h4>
           <div style={{ fontSize: '1.1em' }}>
             <div>{t.observations.length}: 50cm</div>
-            <div>{`t.observations.period}: {pendulumPeriod ? ${pendulumPeriod}s : '---'`}</div>
-            <div>{`t.observations.calculatedG}: {pendulumPeriod ? ${((4 * Math.PI * Math.PI * 0.5) / (pendulumPeriod * pendulumPeriod)).toFixed(2)} m/s² : '---'`}</div>
+            <div>{t.observations.period}: `{pendulumPeriod ? `${pendulumPeriod}s` : '---'}`</div>
+            <div>{t.observations.calculatedG}: `{pendulumPeriod ? `${((4 * Math.PI * Math.PI * 0.5) / (pendulumPeriod * pendulumPeriod)).toFixed(2)} m/s²` : '---'}`</div>
             {pendulumSwinging && (
               <div style={{ marginTop: '10px', color: '#4ECDC4', fontWeight: 'bold' }}>
                 {t.observations.swinging}
@@ -1103,7 +1110,7 @@ const LabExperiment = () => {
         </div>
       </div>
     </div>
-  );
+    );
 
   // Main render logic
   if (currentView === "index") {
