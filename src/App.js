@@ -9,9 +9,7 @@ import ScrollableContainer from './Scroll';
 const MathQuiz = lazy(() => import('./MathQuiz'));
 const GFGWordGame = lazy(() => import('./GFGWordGame'));
 const ScienceQuiz = lazy(() => import('./ScienceQuiz'));
-
-
-
+const PartsMarkingGame = lazy(() => import('./PartsMarkingGame'));
 const GeographyMappping = lazy(() => import('./GeographyMapping'));
 const UserScores = lazy(() => import('./UserScores'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -73,7 +71,7 @@ const translations = {
     selectGame: "Select your game",
     scienceQuiz: "Science Quiz",
     geographyMapping: "Geography Mapping",
-    
+    partsMarkingGame: "Parts Marking Game",
     wordGuessGame: "Word Guess Game",
     mathQuiz: "Math Quiz",
     teamMembers: "Team Members: 2023-2027 ",
@@ -191,7 +189,7 @@ const GameIcon = memo(({ emoji, titleKey, to }) => {
 const GameSelection = memo(() => (
   <div className="games-grid">
     <GameIcon emoji="🔬" titleKey="scienceQuiz" to="/scienceQuiz" />
-    
+    <GameIcon emoji="🧬" titleKey="partsMarkingGame" to="/partsMarkingGame" />
     <GameIcon emoji="🔤" titleKey="wordGuessGame" to="/wordGame" />
     <GameIcon emoji="➕" titleKey="mathQuiz" to="/mathQuiz" />
     <GameIcon emoji="🗺" titleKey="geographyMapping" to="/GeographyMapping" />
@@ -296,10 +294,12 @@ const AppRoutes = () => {
           <Route path="/mathQuiz" element={<MathQuiz />} />
           <Route path="/wordGame" element={<GFGWordGame />} />
           <Route path="/scienceQuiz" element={<ScienceQuiz />} />
+          
       
           <Route path="/GeographyMapping" element={<GeographyMappping />} />
           <Route path="/my-scores" element={<UserScores />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path='/partsMarkingGame' element={<PartsMarkingGame />} />
         </Routes>
       </Suspense>
     </>
