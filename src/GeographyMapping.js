@@ -350,7 +350,7 @@ const GeographyGame = () => {
     const tolerance = Math.min(rect.width, rect.height) * 0.08;
     const isCorrect = distance <= tolerance;
     const timeTaken = 30 - timeLeft;
-    
+     
     if (isCorrect) {
       // Fixed: Simple +10 points per correct answer
       setScore(s => s + 10);

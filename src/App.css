@@ -1,16 +1,7 @@
 /* Root Variables */
 :root {
-  --primary-blue: #3b82f6;
-  --dark-blue: #1e3a8a;
-  --light-blue: #93c5fd;
-  --accent-purple: #8b5cf6;
-  --accent-pink: #ec4899;
-  --white: #ffffff;
-  --light-gray: #f8fafc;
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-medium: rgba(0, 0, 0, 0.2);
-  --shadow-heavy: rgba(0, 0, 0, 0.3);
-}
+  
+  --accent-purple: #8b5cf6;}
 
 /* APK Optimization - Prevent zoom on mobile devices */
 * {
@@ -56,7 +47,7 @@ body {
 /* Main Background with Animated Gradient - Updated for all pages */
 .app-bg {
   min-height: 100vh;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background:#8b5cf6; 
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   position: relative;
