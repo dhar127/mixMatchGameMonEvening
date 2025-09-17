@@ -1352,7 +1352,7 @@ const ScienceQuiz = () => {
         setCurrentQuestionIndex(prev => prev + 1);
         setMatches({});
         setSelectedLeft(null);
-        setTimeLeft(15);
+        setTimeLeft(40);
         setShowResults(false);
         setFeedback({});
       } else {

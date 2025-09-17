@@ -1,1089 +1,413 @@
-/* Virtual Science Lab Styles - Fixed with Enhanced Scrolling */
+/* Global Styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* CRITICAL: Enable proper scrolling like the map CSS */
-html {
-    width: 100vw;
-    height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    margin: 0;
-    padding: 0;
-    /* REMOVED: overflow restrictions that prevent scrolling */
-    min-height: 100%; /* Changed from height to min-height */
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    touch-action: auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
 }
 
-/* Main Index Styles */
+/* Scroll Container */
+.scroll-container {
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #e2e8f0;
+}
+
+/* Remove scrollbar from body when using scroll container */
+body {
+  overflow: hidden;
+}
+
+/* Index Page */
 .index-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    /* Remove overflow constraints - let ScrollableContainer handle it */
+  padding: 2rem;
+  text-align: center;
+  min-height: 100vh;
 }
 
 .main-header {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    text-align: center;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    position: relative;
+  margin-bottom: 3rem;
+  color: white;
 }
 
 .main-header h1 {
-    font-size: 3em;
-    color: #FFD700;
-    font-weight: bold;
-    text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-    margin-bottom: 15px;
-    animation: glow 2s infinite alternate;
-}
-
-@keyframes glow {
-    from { 
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.3); 
-    }
-    to { 
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 30px rgba(255, 215, 0, 0.6); 
-    }
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .main-header p {
-    font-size: 1.2em;
-    margin-bottom: 8px;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
 }
 
-.language-toggle {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    color: white;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 10;
-}
-
-.language-toggle:hover {
-    transform: translateY(-50%) translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-}
-
+/* Experiments Grid */
 .experiments-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .experiment-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    border: 2px solid transparent;
-    position: relative;
-    overflow: visible; /* Changed from auto to visible */
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .experiment-card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    border-color: rgba(255, 215, 0, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 }
 
 .experiment-icon {
-    font-size: 4em;
-    margin-bottom: 20px;
-    display: block;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { 
-        transform: translateY(0); 
-    }
-    40% { 
-        transform: translateY(-10px); 
-    }
-    60% { 
-        transform: translateY(-5px); 
-    }
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
 }
 
 .experiment-card h3 {
-    font-size: 1.8em;
-    color: #FFD700;
-    margin-bottom: 15px;
-    font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
 }
 
 .experiment-card p {
-    font-size: 1em;
-    line-height: 1.5;
-    margin-bottom: 15px;
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 1rem;
 }
 
 .difficulty-badge {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-top: 10px;
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
-.difficulty-badge.easy,
-.difficulty-badge.எளிது { 
-    background: linear-gradient(45deg, #4CAF50, #45a049); 
-    color: white;
+.difficulty-badge.easy { background: #c6f6d5; color: #22543d; }
+.difficulty-badge.medium { background: #fed7d7; color: #742a2a; }
+.difficulty-badge.advanced { background: #bee3f8; color: #2a4365; }
+
+/* Language Toggle */
+.language-toggle {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  margin-bottom: 1rem;
 }
 
-.difficulty-badge.medium,
-.difficulty-badge.நடுத்தர { 
-    background: linear-gradient(45deg, #FF9800, #e68900); 
-    color: white;
+.language-toggle:hover {
+  background: white;
+  color: #667eea;
 }
 
-.difficulty-badge.hard,
-.difficulty-badge.advanced,
-.difficulty-badge.மேம்பட்ட { 
-    background: linear-gradient(45deg, #F44336, #d32f2f); 
-    color: white;
-}
-
-/* EXPERIMENT PAGE - OPTIMIZED FOR SCROLLABLE CONTAINER */
+/* Experiment Page */
 .experiment-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    /* Remove overflow constraints - let ScrollableContainer handle it */
-}
-
-.experiment-page.active {
-    display: flex;
-    flex-direction: column;
+  padding: 1rem;
+  min-height: 100vh;
 }
 
 .experiment-header {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    position: relative;
-    flex-shrink: 0; /* Prevent header from shrinking */
+  text-align: center;
+  color: white;
+  margin-bottom: 2rem;
+  position: relative;
 }
 
 .experiment-header h1 {
-    font-size: 2.5em;
-    color: #FFD700;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.experiment-header p {
-    font-size: 1.2em;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .back-button {
-    position: absolute;
-    right: 100px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    color: white;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  margin-bottom: 1rem;
+  margin-right: 1rem;
 }
 
 .back-button:hover {
-    transform: translateY(-50%) translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  background: white;
+  color: #667eea;
 }
 
-.experiment-header .language-toggle {
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-}
-
-/* MAIN CONTENT SECTION - OPTIMIZED FOR SCROLLABLE CONTAINER */
-.content-section {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 60px;
-    flex: 1;
-    /* Remove overflow constraints - let ScrollableContainer handle it */
-}
-
-.content-section.active {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Enhanced scrolling wrapper - work with ScrollableContainer */
-.scroll-container {
-    flex: 1;
-    /* Remove overflow constraints - let ScrollableContainer handle it */
-}
-
-.content-wrapper {
-    padding-bottom: 3rem;
-    margin-bottom: 2rem;
-    /* Ensure content has space to scroll */
-    min-height: 0; /* Allow natural sizing */
-    flex: 1;
-}
-
-/* LAB CONTAINER - FLEXIBLE LAYOUT LIKE MAP */
+/* Lab Container */
 .lab-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto auto auto auto;
-    gap: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-    /* REMOVE HEIGHT CONSTRAINTS - Copy from map approach */
-    
-    height: auto;
-    padding-bottom: 40px;
-    align-content: start;
-    flex: 1; /* Allow container to grow */
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 1000px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-/* LAB CANVAS - FIXED HEIGHT BUT ALLOW CONTAINER TO GROW */
+/* Canvas */
 .lab-canvas {
-    grid-column: 1;
-    grid-row: 1 / 4;
-    width: 100%;
-    height: 500px;
-    min-height: 400px;
-    max-height: 600px;
-    border-radius: 15px;
-    cursor: pointer;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
-    background: #87CEEB;
-    display: block;
-    touch-action: manipulation;
-    overflow: hidden; /* Allow content to be visible */
+  width: 100%;
+  height: 400px;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  background: #f0f0f0;
 }
 
-/* Touch-friendly enhancements */
-.touch-friendly {
-    min-height: 44px;
-    min-width: 44px;
-    touch-action: manipulation;
-}
-
-/* Remove tap highlight on mobile */
-.experiment-card, .control-button, .back-button, .language-toggle {
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* WEIGHT DISPLAY - TOP RIGHT */
-.weight-display {
-    grid-column: 2;
-    grid-row: 1;
-    background: rgba(255, 255, 255, 0.9);
-    color: #333;
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.1em;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-/* CONTROLS PANEL - MIDDLE RIGHT */
+/* Controls Panel */
 .controls-panel {
-    grid-column: 2;
-    grid-row: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
 }
 
 .control-button {
-    background: linear-gradient(45deg, #4ECDC4, #44A08D);
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    color: white;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    width: 100%;
-    /* Touch-friendly minimum size */
-    min-height: 44px;
-    touch-action: manipulation;
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.control-button:hover:not(:disabled):not(.disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+.control-button:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
-.control-button:disabled,
 .control-button.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    background: linear-gradient(45deg, #999, #666);
+  background: #cbd5e0;
+  color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* OBSERVATIONS PANEL - BOTTOM RIGHT */
-.observation-panel {
-    grid-column: 2;
-    grid-row: 3;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 15px;
-    border-left: 5px solid #4ECDC4;
-    max-height: 300px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+/* Weight Display */
+.weight-display {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 10px;
 }
 
-.observation-panel h4 {
-    color: #4ECDC4;
-    margin-bottom: 10px;
-    font-size: 1.2em;
-}
-
-/* MEASUREMENTS TABLE - OVERLAYS BOTTOM OF CANVAS */
+/* Measurements Table */
 .measurements-table {
-    grid-column: 1 / 3;
-    grid-row: 4;
-    background: rgba(255, 255, 255, 0.95);
-    color: #333;
-    padding: 20px;
-    border-radius: 15px;
-    margin-top: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  margin-bottom: 2rem;
 }
 
 .measurements-table h4 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 1.3em;
-    text-align: center;
+  margin-bottom: 1rem;
+  color: #2d3748;
 }
 
 .measurements-table table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 500px;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.measurements-table th, 
+.measurements-table th,
 .measurements-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .measurements-table th {
-    background: #4ECDC4;
-    color: white;
-    font-weight: bold;
+  background: #f7fafc;
+  font-weight: bold;
+  color: #2d3748;
 }
 
-.measurements-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+/* Observation Panel */
+.observation-panel {
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border-left: 4px solid #4ecdc4;
 }
 
-.measurements-table tbody tr:hover {
-    background-color: #e8f4f8;
+.observation-panel h4 {
+  margin-bottom: 1rem;
+  color: #2d3748;
 }
 
-/* Circuit Styles */
+/* Circuit Components */
 .circuit-container {
-    grid-column: 1;
-    grid-row: 1 / 4;
-    width: 100%;
-    height: 500px;
-    min-height: 400px;
-    margin: 0 auto;
-    position: relative;
-    background: #1a1a1a;
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible; /* Allow content to be visible */
-}
-
-.circuit-wire {
-    position: absolute;
-    background: #FFD700;
-    border-radius: 2px;
+  position: relative;
+  width: 400px;
+  height: 300px;
+  margin: 2rem auto;
+  background: #2d3748;
+  border-radius: 10px;
+  padding: 20px;
 }
 
 .battery {
-    width: 60px;
-    height: 120px;
-    background: linear-gradient(90deg, #333, #666);
-    border-radius: 8px;
-    position: absolute;
-    left: 80px;
-    top: 50%;
-    transform: translateY(-50%);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: #e53e3e;
+  border-radius: 8px;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.battery::before {
-    content: '+';
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #FFD700;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.battery::after {
-    content: '-';
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #FFD700;
-    font-weight: bold;
-    font-size: 18px;
+.circuit-wire {
+  position: absolute;
+  background: #ffd700;
+  border-radius: 2px;
 }
 
 .resistor {
-    width: 80px;
-    height: 30px;
-    background: linear-gradient(90deg, #8B4513, #D2691E);
-    border-radius: 5px;
-    position: absolute;
-    right: 80px;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: background 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
+  position: absolute;
+  width: 100px;
+  height: 20px;
+  border-radius: 10px;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .current-flow {
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    background: #00FF00;
-    border-radius: 50%;
-    animation: current-flow 3s linear infinite;
-    box-shadow: 0 0 15px #00FF00;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #00ff00;
+  border-radius: 50%;
+  animation: flow 2s linear infinite;
 }
 
-@keyframes current-flow {
-    0% { left: 140px; top: 50%; }
-    25% { left: 350px; top: 50%; }
-    50% { right: 80px; bottom: 50%; }
-    75% { left: 140px; bottom: 50%; }
-    100% { left: 140px; top: 50%; }
+@keyframes flow {
+  0% { left: 90px; top: 88px; }
+  25% { left: 240px; top: 88px; }
+  50% { left: 240px; top: 184px; }
+  75% { left: 90px; top: 184px; }
+  100% { left: 90px; top: 88px; }
 }
 
-/* Pendulum Styles */
+/* Pendulum */
 .pendulum-container {
-    grid-column: 1;
-    grid-row: 1 / 4;
-    width: 100%;
-    height: 500px;
-    min-height: 400px;
-    margin: 0 auto;
-    position: relative;
-    background: rgba(255,255,255,0.1);
-    border-radius: 15px;
-    overflow: visible;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  position: relative;
+  width: 400px;
+  height: 300px;
+  margin: 2rem auto;
+  background: #2d3748;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .pendulum-string {
-    position: absolute;
-    top: 40px;
-    left: 50%;
-    transform-origin: top center;
-    width: 3px;
-    height: 250px;
-    background: #FFD700;
-    transform: translateX(-50%);
-    transition: transform 0.05s linear;
+  width: 2px;
+  height: 200px;
+  background: #ffd700;
+  position: relative;
+  transform-origin: top center;
+  transition: transform 0.1s ease-out;
 }
 
 .pendulum-bob {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background: radial-gradient(circle, #FF6B6B, #FF8E53);
-    border-radius: 50%;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  position: absolute;
+  bottom: -15px;
+  left: -13px;
+  width: 28px;
+  height: 28px;
+  background: #e53e3e;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-/* RESPONSIVE DESIGN WITH PROPER SCROLLING - Enhanced like map CSS */
-@media (max-width: 1200px) {
-    .lab-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto auto;
-        gap: 15px;
-        /* Remove height constraints */
-        height: auto;
-        min-height: 0;
-    }
-    
-    .lab-canvas {
-        grid-column: 1;
-        grid-row: 1;
-        height: 400px;
-        min-height: 400px;
-    }
-    
-    .weight-display {
-        grid-column: 1;
-        grid-row: 2;
-    }
-    
-    .controls-panel {
-        grid-column: 1;
-        grid-row: 3;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .control-button {
-        flex: 1;
-        min-width: 150px;
-        margin: 5px;
-        min-height: 48px; /* Larger touch target */
-    }
-    
-    .observation-panel {
-        grid-column: 1;
-        grid-row: 4;
-        max-height: 200px;
-    }
-    
-    .measurements-table {
-        grid-column: 1;
-        grid-row: 5;
-        margin-top: 0;
-    }
-    
-    .circuit-container,
-    .pendulum-container {
-        height: 400px;
-        min-height: 400px;
-    }
+/* Content Section */
+.content-section {
+  display: none;
 }
 
+.content-section.active {
+  display: block;
+}
+
+.content-wrapper {
+  width: 100%;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    /* CRITICAL: Copy mobile scrolling fixes from map CSS */
-    body {
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .experiment-page {
-        position: relative;
-        overflow-x: hidden;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        min-height: 100vh;
-    }
-    
-    .content-section {
-        padding: 15px;
-        /* Remove min-height constraints on mobile */
-        min-height: 0;
-        overflow: visible;
-    }
-    
-    .main-header h1 { 
-        font-size: 2.2em; 
-    }
-    
-    .experiments-grid { 
-        grid-template-columns: 1fr; 
-        padding: 20px; 
-        gap: 20px;
-    }
-    
-    .experiment-header h1 { 
-        font-size: 2em; 
-    }
-    
-    .experiment-header {
-        padding: 15px;
-        flex-shrink: 0;
-    }
-    
-    .back-button {
-        position: relative;
-        left: 0;
-        top: 0;
-        transform: none;
-        margin-bottom: 15px;
-        display: block;
-        width: fit-content;
-    }
-    
-    .experiment-header .language-toggle {
-        position: relative;
-        top: 0;
-        right: 0;
-        transform: none;
-        margin-bottom: 15px;
-        display: block;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .lab-canvas { 
-        height: 350px;
-        min-height: 350px;
-    }
-    
-    .controls-panel {
-        flex-direction: column;
-        gap: 10px;
-        overflow: visible;
-    }
-    
-    .control-button {
-        padding: 12px 15px;
-        font-size: 1em;
-        min-height: 48px; /* Larger touch targets on mobile */
-        touch-action: manipulation;
-    }
-    
-    .circuit-container,
-    .pendulum-container {
-        height: 350px;
-        min-height: 350px;
-        padding: 20px;
-        overflow: visible;
-    }
-    
-    .battery {
-        width: 50px;
-        height: 100px;
-        left: 60px;
-    }
-    
-    .resistor {
-        width: 60px;
-        height: 25px;
-        right: 60px;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-header {
-        padding: 20px 15px;
-    }
-    
-    .main-header h1 {
-        font-size: 1.8em;
-    }
-    
-    .language-toggle {
-        position: relative !important;
-        top: 0 !important;
-        right: 0 !important;
-        transform: none !important;
-        margin-bottom: 15px;
-        display: block;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .experiments-grid {
-        padding: 15px;
-    }
-    
-    .experiment-card {
-        padding: 20px;
-        overflow: visible;
-    }
-    
-    .experiment-icon {
-        font-size: 3em;
-    }
-    
-    .experiment-card h3 {
-        font-size: 1.5em;
-    }
-    
-    .content-section {
-        padding: 10px;
-        overflow: visible;
-    }
-    
-    .lab-container {
-        padding: 10px;
-        gap: 10px;
-    }
-    
-    .lab-canvas {
-        height: 300px;
-        min-height: 300px;
-    }
-    
-    .controls-panel {
-        padding: 15px;
-        gap: 8px;
-    }
-    
-    .control-button {
-        padding: 10px 15px;
-        font-size: 0.9em;
-        min-height: 44px;
-    }
-    
-    .observation-panel {
-        padding: 15px;
-        max-height: 200px;
-    }
-    
-    .weight-display {
-        padding: 12px;
-        font-size: 1em;
-    }
-    
-    .circuit-container,
-    .pendulum-container {
-        height: 300px;
-        min-height: 300px;
-        padding: 15px;
-    }
-}
-
-/* Touch-friendly enhancements - Copy from map CSS */
-@media (hover: none) and (pointer: coarse) {
-    /* Ensure body can scroll on touch devices */
-    body {
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .experiment-page {
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .control-button {
-        cursor: grab;
-        -webkit-user-select: none;
-        user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-        padding: 1rem 1.2rem;
-    }
-    
-    .control-button:active {
-        cursor: grabbing;
-    }
-    
-    .lab-canvas {
-        -webkit-overflow-scrolling: touch;
-    }
-}
-
-/* iOS Safari specific fixes - Copy from map CSS */
-@supports (-webkit-touch-callout: none) {
-    .experiment-page {
-        -webkit-overflow-scrolling: touch;
-        overflow-y: auto;
-    }
-    
-    .content-section {
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    body {
-        -webkit-overflow-scrolling: touch;
-    }
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-    
-    .experiment-icon {
-        animation: none;
-    }
-    
-    .current-flow {
-        animation: none;
-        display: none;
-    }
-    
-    .pendulum-string {
-        transition: none;
-    }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .experiment-card {
-        border: 3px solid white;
-    }
-    
-    .control-button {
-        border: 2px solid white;
-    }
-    
-    .back-button {
-        border: 2px solid white;
-    }
-    
-    .language-toggle {
-        border: 2px solid white;
-    }
-}
-
-/* Focus states for accessibility */
-button:focus,
-.experiment-card:focus {
-    outline: 3px solid #FFD700;
-    outline-offset: 2px;
-}
-
-/* Smooth scrolling for better UX - Copy from map CSS */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Animations */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.loading-spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top: 4px solid #FFD700;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
-}
-
-/* Utility classes for state management */
-.hidden {
-    display: none !important;
-}
-
-.disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    pointer-events: none;
-}
-
-/* Additional experiment-specific styles */
-.volcano-eruption {
-    animation: erupt 0.5s ease-out;
-}
-
-@keyframes erupt {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.spring-extension {
-    transition: height 0.5s ease-in-out;
-}
-
-.circuit-active {
-    background: linear-gradient(45deg, #00FF00, #32CD32) !important;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-}
-
-.pendulum-active .pendulum-string {
-    animation: pendulum-swing 2s ease-in-out infinite;
-}
-
-@keyframes pendulum-swing {
-    0%, 100% { transform: translateX(-50%) rotate(45deg); }
-    50% { transform: translateX(-50%) rotate(-45deg); }
-}
-
-.scroll-indicator {
+  .main-header h1 {
+    font-size: 2rem;
+  }
+  
+  .experiments-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .experiment-card {
+    padding: 1.5rem;
+  }
+  
+  .controls-panel {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .control-button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .circuit-container,
+  .pendulum-container {
+    width: 100%;
+    max-width: 350px;
+  }
+  
+  .language-toggle,
+  .back-button {
     position: relative;
-}
-
-.scroll-indicator::after {
-    content: "";
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.scroll-indicator:hover::after {
-    opacity: 1;
-}
-
-/* MOBILE SCROLLING ENHANCEMENTS */
-@media (max-width: 768px) {
-    /* Ensure body allows scrolling on mobile */
-    body {
-        overflow: auto !important;
-        height: auto !important;
-        touch-action: pan-y;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Mobile-specific scroll fixes */
-    .index-page, .experiment-page {
-        min-height: 100vh;
-        min-height: 100dvh; /* Use dynamic viewport height */
-        height: auto;
-        overflow: visible;
-    }
-    
-    /* Ensure experiment content is scrollable on mobile */
-    .experiments-grid {
-        padding: 20px;
-        gap: 20px;
-        /* Add extra padding for mobile scrolling */
-        padding-bottom: 80px;
-    }
-    
-    /* Mobile-specific lab container adjustments */
-    .lab-container {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        padding-bottom: 80px;
-    }
-    
-    /* Mobile canvas adjustments */
-    .lab-canvas {
-        width: 100%;
-        height: 300px;
-        max-height: 300px;
-    }
-    
-    /* Controls panel mobile adjustments */
-    .controls-panel {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-    
-    .control-button {
-        flex: 1;
-        min-width: 120px;
-        font-size: 0.9em;
-        padding: 12px;
-    }
-    
-    /* Observations mobile adjustments */
-    .observations-section {
-        margin-bottom: 30px;
-    }
-    
-    .observations-section textarea {
-        height: 100px;
-        font-size: 14px;
-    }
-    
-    /* Progress indicators mobile */
-    .progress-section {
-        margin-bottom: 30px;
-    }
-    
-    /* Ensure scroll works with touch */
-    .experiment-header {
-        position: relative;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-    }
+    top: auto;
+    right: auto;
+    left: auto;
+    margin-bottom: 1rem;
+  }
 }
