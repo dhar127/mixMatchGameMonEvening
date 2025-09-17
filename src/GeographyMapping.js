@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback, memo } from 'react';
 import './GeographyGame.css';
+import LazyImage from './LazyImage';
 import TamilNaduMap from './assets/TamilNaduMap.png';
 import IndiaMap from './assets/IndiaMap.png';
 import IndianRiverMap from './assets/IndianRiverMap.png';
@@ -50,7 +51,7 @@ const worldPoints = [
   { name: "Egypt", tamil: "எகிப்து", top: "48%", left: "48%" }
 ];
 
-const GeographyGame = () => {
+const GeographyGame = memo(() => {
   const { user, saveScore } = useUser();
   const [currentMap, setCurrentMap] = useState('india');
   const [language, setLanguage] = useState('english');
@@ -1262,6 +1263,6 @@ const GeographyGame = () => {
       </div>
     </ScrollableContainer>
   );
-};
+});
 
 export default GeographyGame;

@@ -24,8 +24,20 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // Enable R8 optimization for better performance
+            zipAlignEnabled true
+            
+            // Optimize for low-end devices
+            debuggable false
+        }
+        debug {
+            // Keep debug builds unoptimized for development
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
         }
     }
 }

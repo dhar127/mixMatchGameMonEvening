@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 
 // Simple translations
 const translations = {
@@ -171,7 +171,7 @@ const generateRandomQuestions = (level) => {
 };
 
 // Main component
-export default function WordGame() {
+const WordGame = memo(() => {
   const [language, setLanguage] = useState("en");
   const [currentLevel, setCurrentLevel] = useState(null);
   const [currentScreen, setCurrentScreen] = useState("home"); // home, game, results
@@ -863,4 +863,6 @@ export default function WordGame() {
   }
 
   return <div style={baseStyle}></div>;
-}
+});
+
+export default WordGame;

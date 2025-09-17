@@ -81,7 +81,7 @@ const translations = {
     nikhita: "Tharigopula Nikhita - III/CSE",
     sheeba: "Sheeba Sherlin S - III/CSE",
     mentorName: "M P Karthikeyan - Associate Professor/CSE",
-    backToMenu: "← Back to Menu",
+    backToMenu: "← Back to Home",
     languageToggle: "தமிழ்",
     myScores: "My Scores",
     leaderboard: "Leaderboard",

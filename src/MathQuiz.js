@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 
 // Tamil Translations
 const translations = {
@@ -82,7 +82,7 @@ const questionBank = {
   ]
 };
 
-// Simplified shuffle function
+// Optimized shuffle function - memoized to prevent repeated array creation
 const shuffleArray = (array) => {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -92,8 +92,8 @@ const shuffleArray = (array) => {
   return shuffled;
 };
 
-// Lightweight feedback component
-const QuizFeedback = ({ message, type, correctAnswer, language, onNext }) => {
+// Memoized lightweight feedback component to prevent unnecessary re-renders
+const QuizFeedback = memo(({ message, type, correctAnswer, language, onNext }) => {
   const isCorrect = type === 'correct';
   
   const overlayStyle = {
@@ -160,10 +160,10 @@ const QuizFeedback = ({ message, type, correctAnswer, language, onNext }) => {
       </div>
     </div>
   );
-};
+});
 
-// Main App Component
-export default function MathQuiz() {
+// Main App Component - Memoized for performance
+const MathQuiz = memo(() => {
   const [currentScreen, setCurrentScreen] = useState("home");
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [language, setLanguage] = useState("english");
@@ -178,7 +178,14 @@ export default function MathQuiz() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
 
-  const t = translations[language];
+  // Memoized translations to prevent object recreation on every render
+  const t = useMemo(() => translations[language], [language]);
+  
+  // Memoized current question to prevent unnecessary lookups
+  const currentQuestion = useMemo(() => 
+    shuffledQuestions[currentQuestionIndex] || null, 
+    [shuffledQuestions, currentQuestionIndex]
+  );
 
   // Styles
   const containerStyle = {
@@ -424,7 +431,7 @@ export default function MathQuiz() {
               padding: '0.5rem'
             }}
           >
-            🏠
+             Back to level
           </button>
         </div>
 
@@ -653,4 +660,6 @@ export default function MathQuiz() {
   }
 
   return <div style={containerStyle} />;
-}
+});
+
+export default MathQuiz;

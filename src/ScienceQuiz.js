@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import './ScienceQuiz.css';
 import { useUser } from './UserContext';
-
-// Move useUser hook inside the component - this was the main issue
 const questionSets = {
   level1: [
    {
@@ -1164,7 +1162,7 @@ const Confetti = ({ active }) => {
   );
 };
 
-const ScienceQuiz = () => {
+const ScienceQuiz = memo(() => {
   // FIXED: Move useUser hook inside the component
   const { user, addScore } = useUser();
   
@@ -1590,6 +1588,6 @@ const ScienceQuiz = () => {
       )}
     </div>
   );
-};
+});
 
 export default ScienceQuiz;
