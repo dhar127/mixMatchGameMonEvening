@@ -29,7 +29,8 @@ const translations = {
     congratulations: "Congratulations!",
     correctWordWas: "The word was:",
     questionsCorrect: "questions correct out of",
-    nextLevel: "Next Level"
+    nextLevel: "Next Level",
+     tooManyWrongGuesses: "Too many wrong guesses! Game over!"
   },
   ta: {
     title: "சொல் அறிதல் விளையாட்டு",
@@ -58,7 +59,7 @@ const translations = {
     congratulations: "வாழ்த்துக்கள்!",
     correctWordWas: "சொல்:",
     questionsCorrect: "கேள்விகள் சரியாக",
-    nextLevel: "அடுத்த நிலை"
+    nextLevel: "அடுத்த நிலை",tooManyWrongGuesses: "அதிக தவறான ஊகங்கள்! விளையாட்டு முடிந்தது!"
   }
 };
 
@@ -188,6 +189,7 @@ const WordGame = memo(() => {
   const [feedback, setFeedback] = useState(null);
   const [gameStartTime, setGameStartTime] = useState(null);
   const [totalGameTime, setTotalGameTime] = useState(0);
+  const [hintsUsedThisQuestion, setHintsUsedThisQuestion] = useState(0);
 
   const t = translations[language];
 
@@ -214,35 +216,19 @@ const WordGame = memo(() => {
     return () => clearInterval(interval);
   }, [timerActive, timeLeft]);
 
-  // Game over effect
-  useEffect(() => {
-    if (wrongGuesses >= 3) {
-      setTimerActive(false);
-      setFeedback({ 
-        message: t.gameOver, 
-        type: 'incorrect',
-        correctWord: wordData?.word 
-      });
-    }
-  }, [wrongGuesses, t.gameOver, wordData?.word]);
-
   const handleTimeUp = () => {
     setTimerActive(false);
-    setFeedback({ 
-      message: t.timeUp, 
-      type: 'incorrect',
-      correctWord: wordData?.word 
-    });
+   setFeedback({ 
+  message: t.tooManyWrongGuesses, 
+  type: 'incorrect',
+  correctWord: wordData.word 
+});
   };
 
   const handleFeedbackClose = useCallback(() => {
     setFeedback(null);
-    if (wrongGuesses >= 3) {
-      resetGame();
-    } else {
-      nextQuestion();
-    }
-  }, [wrongGuesses]);
+    nextQuestion();
+  }, [currentQuestionIndex, randomQuestions]);
 
   const startGame = (level) => {
     setCurrentLevel(level);
@@ -261,6 +247,7 @@ const WordGame = memo(() => {
   };
 
   const startQuestion = (questionsArray, questionIndex) => {
+    console.log(`Starting question ${questionIndex + 1} of ${questionsArray.length}`);
     if (questionIndex >= questionsArray.length) {
       completeLevel();
       return;
@@ -268,33 +255,47 @@ const WordGame = memo(() => {
 
     setWordData(questionsArray[questionIndex]);
     setChosenLetters([]);
-    setHints(3);
+    //setHints(3);
+    setHints(3); // Reset hints for each question
+   setHintsUsedThisQuestion(0); // Reset hints counter
     setWrongGuesses(0);
     setTimeLeft(getTimerDuration(currentLevel));
     setTimerActive(true);
   };
 
-  const selectLetter = (letter) => {
-    if (!chosenLetters.includes(letter) && timerActive) {
-      setChosenLetters([...chosenLetters, letter]);
-      if (!wordData.word.includes(letter)) {
-        setWrongGuesses(wrongGuesses + 1);
-      }
-    }
-  };
-
-  const useHint = () => {
-    if (hints > 0 && timerActive) {
-      const hiddenLetterIndex = wordData.word
-        .split("")
-        .findIndex((letter) => !chosenLetters.includes(letter));
+const selectLetter = (letter) => {
+  if (!chosenLetters.includes(letter) && timerActive) {
+    setChosenLetters([...chosenLetters, letter]);
+    if (!wordData.word.includes(letter)) {
+      const newWrongGuesses = wrongGuesses + 1;
+      setWrongGuesses(newWrongGuesses);
       
-      if (hiddenLetterIndex !== -1) {
-        setChosenLetters([...chosenLetters, wordData.word[hiddenLetterIndex]]);
-        setHints(hints - 1);
+      // Check if maximum wrong guesses reached
+      if (newWrongGuesses >= 3) {
+        setTimerActive(false);
+        setFeedback({ 
+          message: "Too many wrong guesses!", 
+          type: 'incorrect',
+          correctWord: wordData.word 
+        });
       }
     }
-  };
+  }
+};
+
+const useHint = () => {
+  if (hints > 0 && timerActive) {
+    const hiddenLetterIndex = wordData.word
+      .split("")
+      .findIndex((letter) => !chosenLetters.includes(letter));
+    
+    if (hiddenLetterIndex !== -1) {
+      setChosenLetters([...chosenLetters, wordData.word[hiddenLetterIndex]]);
+      setHints(hints - 1);
+      setHintsUsedThisQuestion(hintsUsedThisQuestion + 1); // Add this line
+    }
+  }
+};
 
   const removeLetter = () => {
     if (timerActive && chosenLetters.length > 0) {
@@ -324,38 +325,44 @@ const WordGame = memo(() => {
     }
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = useCallback(() => {
     const nextIndex = currentQuestionIndex + 1;
+    if (nextIndex >= randomQuestions.length) {
+      completeLevel();
+      return;
+    }
     setCurrentQuestionIndex(nextIndex);
     startQuestion(randomQuestions, nextIndex);
-  };
+  }, [currentQuestionIndex, randomQuestions, currentLevel]);
 
-  const completeLevel = () => {
+  const completeLevel = useCallback(() => {
     setTimerActive(false);
     setCurrentScreen("results");
     
-    const endTime = Date.now();
-    const timeTakenInSeconds = Math.round((endTime - gameStartTime) / 1000);
-    setTotalGameTime(timeTakenInSeconds);
-  };
+    if (gameStartTime) {
+      const endTime = Date.now();
+      const timeTakenInSeconds = Math.round((endTime - gameStartTime) / 1000);
+      setTotalGameTime(timeTakenInSeconds);
+    }
+  }, [gameStartTime]);
 
-  const resetGame = () => {
-    setCurrentScreen("home");
-    setCurrentLevel(null);
-    setCurrentQuestionIndex(0);
-    setWordData(null);
-    setRandomQuestions([]);
-    setChosenLetters([]);
-    setHints(3);
-    setWrongGuesses(0);
-    setTimeLeft(0);
-    setTimerActive(false);
-    setScore(0);
-    setCorrectAnswers(0);
-    setGameStartTime(null);
-    setTotalGameTime(0);
-  };
-
+const resetGame = () => {
+  setCurrentScreen("home");
+  setCurrentLevel(null);
+  setCurrentQuestionIndex(0);
+  setWordData(null);
+  setRandomQuestions([]);
+  setChosenLetters([]);
+  setHints(3);
+  setHintsUsedThisQuestion(0); // Add this line
+  setWrongGuesses(0);
+  setTimeLeft(0);
+  setTimerActive(false);
+  setScore(0);
+  setCorrectAnswers(0);
+  setGameStartTime(null);
+  setTotalGameTime(0);
+};
   // Render alphabet buttons
   const renderLetters = () => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -638,9 +645,9 @@ const WordGame = memo(() => {
               <div style={{ fontSize: '16px', color: '#666' }}>
                 ✅ {correctAnswers}/{randomQuestions.length}
               </div>
-              <div style={{ fontSize: '16px', color: '#666' }}>
-                {t.hintsRemaining} {hints}
-              </div>
+             <div style={{ fontSize: '16px', color: '#666' }}>
+  {t.hintsRemaining} {hints} | Used: {hintsUsedThisQuestion}
+</div>
               <div style={{ fontSize: '16px', color: '#ef4444' }}>
                 ❌ {wrongGuesses}/3
               </div>
