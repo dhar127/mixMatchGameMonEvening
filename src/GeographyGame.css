@@ -1,8 +1,35 @@
 /* Geography Game - Simple Click Version CSS */
+/* Touch optimization for preventing double-click issues */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Touch-friendly interactions */
+.clickable-element,
+.map-container,
+.game-button,
+button {
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  cursor: pointer;
+}
+
+/* Allow text selection in inputs */
+input, 
+select, 
+textarea {
+  touch-action: manipulation;
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 /* Base Game Container */

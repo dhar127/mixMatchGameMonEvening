@@ -1181,6 +1181,13 @@ const ScienceQuiz = memo(() => {
   const [gameStartTime, setGameStartTime] = useState(null);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
 
+  // Clear matches when question changes
+  useEffect(() => {
+    setMatches({});
+    setSelectedLeft(null);
+    setFeedback({});
+  }, [currentQuestionIndex]);
+
   // Timer effect
   useEffect(() => {
     let timer;
@@ -1347,12 +1354,17 @@ const ScienceQuiz = memo(() => {
 
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(prev => prev + 1);
+        // Clear all user inputs first
         setMatches({});
         setSelectedLeft(null);
-        setTimeLeft(40);
-        setShowResults(false);
         setFeedback({});
+        setShowResults(false);
+        
+        // Then move to next question after a small delay
+        setTimeout(() => {
+          setCurrentQuestionIndex(prev => prev + 1);
+          setTimeLeft(40);
+        }, 100);
       } else {
         // Game completed - save score before showing results
         saveGameScore();
@@ -1454,7 +1466,17 @@ const ScienceQuiz = memo(() => {
 
   // Playing state
   const currentQuestion = questions[currentQuestionIndex];
-  if (!currentQuestion) return null;
+  if (!currentQuestion) {
+    return (
+      <div className="game-container playing-bg">
+        <div className="game-header">
+          <h2 style={{ color: 'white', textAlign: 'center' }}>
+            {language === 'english' ? 'Loading...' : 'ஏற்றுகிறது...'}
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   const questionData = currentQuestion[language];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -1486,11 +1508,11 @@ const ScienceQuiz = memo(() => {
         <div className="progress-fill" style={{width: `${progress}%`}}></div>
       </div>
 
-      <div className="question-card">
+      <div key={`question-card-${currentQuestionIndex}`} className="question-card">
         <h2>{questionData.question}</h2>
       </div>
 
-      <div className="game-area">
+      <div key={`game-area-${currentQuestionIndex}`} className="game-area">
         <div className="left-column">
           <h3>{language === 'english' ? 'Select:' : 'தேர்ந்தெடு:'}</h3>
           {questionData.leftItems.map((item) => {

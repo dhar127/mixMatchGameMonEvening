@@ -2,5 +2,23 @@
   "appId": "com.example.app",
   "appName": "Mix and Match Contest for Budding Innovators",
   "webDir": "build",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#ffffff"
+    },
+    "Keyboard": {
+      "resize": "body",
+      "style": "dark",
+      "resizeOnFullScreen": true
+    }
+  },
+  "android": {
+    "webContentsDebuggingEnabled": false,
+    "appendUserAgent": "MixMatchGame",
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webViewPresentationStyle": "fullscreen"
+  }
 }

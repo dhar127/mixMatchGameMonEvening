@@ -232,18 +232,31 @@ const MathQuiz = memo(() => {
   const handleNextQuestion = useCallback(() => {
     setFeedback(null);
     setAnswerSubmitted(false);
+    
+    // Clear all user inputs immediately
     setSelectedAnswer(null);
     setInputAnswer("");
     setSelectedSequence([]);
     
     if (currentQuestionIndex < shuffledQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setTimeLeft(30);
+      // Use setTimeout to ensure state is cleared before moving to next question
+      setTimeout(() => {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setTimeLeft(30);
+      }, 100);
     } else {
       setIsTestActive(false);
       setCurrentScreen("results");
     }
   }, [currentQuestionIndex, shuffledQuestions.length]);
+
+  // Clear selection when question changes
+  useEffect(() => {
+    setSelectedAnswer(null);
+    setInputAnswer("");
+    setSelectedSequence([]);
+    setAnswerSubmitted(false);
+  }, [currentQuestionIndex]);
 
   // Timer effect
   useEffect(() => {
@@ -370,7 +383,29 @@ const MathQuiz = memo(() => {
   }
 
   // Test Screen
-  if (currentScreen === "test" && shuffledQuestions.length > 0) {
+  if (currentScreen === "test") {
+    // Show loading if questions haven't loaded yet
+    if (shuffledQuestions.length === 0) {
+      return (
+        <div style={{
+          ...containerStyle,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          padding: '1rem'
+        }}>
+          <div style={cardStyle}>
+            <h2 style={{ color: 'white', marginBottom: '1rem' }}>
+              {t.title}
+            </h2>
+            <p style={{ color: 'white', opacity: 0.9 }}>
+              Loading questions...
+            </p>
+          </div>
+        </div>
+      );
+    }
     const q = shuffledQuestions[currentQuestionIndex];
     const questionText = (language === "tamil" && q.language?.tamil) ? q.language.tamil : q.q;
     const backgrounds = {
@@ -442,10 +477,12 @@ const MathQuiz = memo(() => {
           alignItems: 'center', 
           justifyContent: 'center' 
         }}>
-          <div style={{
-            ...cardStyle,
-            maxWidth: '32rem'
-          }}>
+          <div 
+            key={`question-${currentQuestionIndex}`}
+            style={{
+              ...cardStyle,
+              maxWidth: '32rem'
+            }}>
             <h2 style={{ 
               fontSize: '1.25rem', 
               fontWeight: '600', 
@@ -659,7 +696,26 @@ const MathQuiz = memo(() => {
     );
   }
 
-  return <div style={containerStyle} />;
+  // Default fallback - should never reach here, but just in case, show home screen
+  return (
+    <div style={{
+      ...containerStyle,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '1rem'
+    }}>
+      <div style={cardStyle}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>
+          {t.title}
+        </h1>
+        <p style={{ color: 'white', opacity: 0.9, marginBottom: '1.5rem', fontSize: '0.875rem' }}>
+          Loading...
+        </p>
+      </div>
+    </div>
+  );
 });
 
 export default MathQuiz;

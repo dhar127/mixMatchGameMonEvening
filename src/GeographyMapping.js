@@ -7,6 +7,7 @@ import IndianRiverMap from './assets/IndianRiverMap.png';
 import WorldMap from './assets/WorldMap.png';
 import { useUser } from './UserContext';
 import ScrollableContainer from './Scroll';
+import { useTouchHandler } from './useTouchHandler';
 
 // Updated coordinates based on the map screenshots
 const tamilNaduPoints = [
@@ -26,8 +27,8 @@ const indiaPoints = [
   { name: "TamilNadu", tamil: "தமிழ்நாடு", top: "83%", left: "44%" },
   { name: "WestBengal", tamil: "மேற்கு வங்காளம்", top: "48%", left: "60%" },
   { name: "Karnataka", tamil: "கர்நாடகா", top: "72%", left: "39%" },
-  { name: "Telgana", tamil: "தெலங்கானா", top: "65%", left: "45%" },
-  { name: "Rajastan", tamil: "ராஜஸ்தான்", top: "39%", left: "37%" },
+  { name: "Telangana", tamil: "தெலங்கானா", top: "65%", left: "45%" },
+  { name: "Rajasthan", tamil: "ராஜஸ்தான்", top: "39%", left: "37%" },
   { name: "Goa", tamil: "கோவா", top: "70%", left: "36%" }
 ];
 
@@ -53,8 +54,15 @@ const worldPoints = [
 
 const GeographyGame = memo(() => {
   const { user, saveScore } = useUser();
+  const { handleSingleTouch } = useTouchHandler();
   const [currentMap, setCurrentMap] = useState('india');
   const [language, setLanguage] = useState('english');
+
+  // Ensure language is always valid
+  const safeLanguage = useMemo(() => {
+    return (language === 'english' || language === 'tamil') ? language : 'english';
+  }, [language]);
+
   const [gameState, setGameState] = useState('menu'); // menu, playing, completed
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -81,25 +89,25 @@ const GeographyGame = memo(() => {
     tamilnadu: {
       name: { english: "Tamil Nadu Map", tamil: "தமிழ்நாடு வரைபடம்" },
       points: tamilNaduPoints,
-        bgImage: `url(${TamilNaduMap})`,
+      bgImage: `url(${TamilNaduMap})`,
       bgColor: "#ff9a9e"
     },
     india: {
       name: { english: "India Map", tamil: "இந்தியா வரைபடம்" },
       points: indiaPoints,
-        bgImage: `url(${IndiaMap})`,
+      bgImage: `url(${IndiaMap})`,
       bgColor: "#a8edea"
     },
     rivers: {
       name: { english: "Indian Rivers Map", tamil: "இந்திய நதிகள் வரைபடம்" },
       points: riverPoints,
-        bgImage: `url(${IndianRiverMap})`,
+      bgImage: `url(${IndianRiverMap})`,
       bgColor: "#d299c2"
     },
     world: {
       name: { english: "World Map", tamil: "உலக வரைபடம்" },
       points: worldPoints,
-        bgImage: `url(${WorldMap})`,
+      bgImage: `url(${WorldMap})`,
       bgColor: "#89f7fe"
     }
   }), []);
@@ -201,6 +209,25 @@ const GeographyGame = memo(() => {
     }
   }), []);
 
+  // Helper function to safely get text
+  const getText = useCallback((key) => {
+    if (!texts || !safeLanguage || !texts[safeLanguage]) {
+      console.warn(`Missing text for language: ${safeLanguage}, key: ${key}`);
+      return key;
+    }
+    return texts[safeLanguage][key] || key;
+  }, [safeLanguage, texts]);
+
+  // Add safety check for current map config
+  const getCurrentMapConfig = useCallback(() => {
+    const config = mapConfigs[currentMap];
+    if (!config) {
+      console.warn(`Map config not found for: ${currentMap}, falling back to india`);
+      return mapConfigs.india;
+    }
+    return config;
+  }, [mapConfigs, currentMap]);
+
   // Optimized notification system
   const showNotification = useCallback((message, type = 'info') => {
     setNotification({ message, type });
@@ -216,6 +243,12 @@ const GeographyGame = memo(() => {
 
   // Simplified start game function
   const startGame = useCallback((mapKey) => {
+    // Validate map key exists
+    if (!mapConfigs[mapKey]) {
+      console.error(`Invalid map key: ${mapKey}`);
+      return;
+    }
+    
     setCurrentMap(mapKey);
     setGameState('playing');
     setCurrentQuestionIndex(0);
@@ -224,7 +257,7 @@ const GeographyGame = memo(() => {
     setPlacedMarkers([]);
     setGameResults([]);
     startTimer();
-  }, []);
+  }, [mapConfigs]);
 
   // Timer functions
   const startTimer = useCallback(() => {
@@ -251,7 +284,8 @@ const GeographyGame = memo(() => {
 
   const timeUp = useCallback(() => {
     stopTimer();
-    const currentPoint = mapConfigs[currentMap].points[currentQuestionIndex];
+    const mapConfig = getCurrentMapConfig();
+    const currentPoint = mapConfig.points[currentQuestionIndex];
     
     // Record the result as incorrect
     setGameResults(prev => [...prev, {
@@ -265,11 +299,12 @@ const GeographyGame = memo(() => {
     setTimeout(() => {
       nextQuestion();
     }, 1000); // Reduced timeout
-  }, [currentMap, currentQuestionIndex, language, mapConfigs, texts, stopTimer, showNotification]);
+  }, [currentQuestionIndex, language, getCurrentMapConfig, texts, stopTimer, showNotification]);
 
   // Optimized check answer function
   const checkAnswer = useCallback((clickX, clickY) => {
-    const currentPoint = mapConfigs[currentMap].points[currentQuestionIndex];
+    const mapConfig = getCurrentMapConfig();
+    const currentPoint = mapConfig.points[currentQuestionIndex];
     
     // Get map element using ref for better performance
     const mapElement = mapElementRef.current;
@@ -317,11 +352,12 @@ const GeographyGame = memo(() => {
     setTimeout(() => {
       nextQuestion();
     }, 1000); // Reduced timeout
-  }, [currentMap, currentQuestionIndex, timeLeft, mapConfigs, language, texts, showNotification, stopTimer]);
+  }, [currentQuestionIndex, timeLeft, getCurrentMapConfig, language, texts, showNotification, stopTimer]);
 
   // Next question function
   const nextQuestion = useCallback(() => {
-    const totalQuestions = mapConfigs[currentMap].points.length;
+    const mapConfig = getCurrentMapConfig();
+    const totalQuestions = mapConfig.points.length;
     
     if (currentQuestionIndex + 1 >= totalQuestions) {
       endGame();
@@ -330,7 +366,7 @@ const GeographyGame = memo(() => {
       setTimeLeft(40);
       startTimer();
     }
-  }, [currentMap, currentQuestionIndex, mapConfigs, startTimer]);
+  }, [currentQuestionIndex, getCurrentMapConfig, startTimer]);
 
   // End game function
   const endGame = useCallback(() => {
@@ -368,7 +404,6 @@ const GeographyGame = memo(() => {
   const handleMapClick = useCallback((e) => {
     if (gameState !== 'playing') return;
     
-    e.preventDefault();
     const rect = e.currentTarget.getBoundingClientRect();
     
     // Handle both mouse and touch events
@@ -381,13 +416,22 @@ const GeographyGame = memo(() => {
     checkAnswer(clickX, clickY);
   }, [gameState, checkAnswer]);
 
-  // Handle touch events
-  const handleTouchStart = useCallback((e) => {
-    e.preventDefault();
-    if (gameState === 'playing') {
-      handleMapClick(e);
-    }
-  }, [gameState, handleMapClick]);
+  // Use the touch handler to prevent double-touch issues
+  const handleMapInteraction = handleSingleTouch(handleMapClick);
+
+  // Create touch-safe button handlers
+  const handleStartGame = useCallback((mapKey) => {
+    return handleSingleTouch(() => startGame(mapKey));
+  }, [handleSingleTouch, startGame]);
+
+  const handleLanguageToggle = handleSingleTouch(() => {
+    setLanguage(language === 'english' ? 'tamil' : 'english');
+  });
+
+  const handleBackToLevels = handleSingleTouch(backToLevels);
+  const handleResetGame = handleSingleTouch(resetGame);
+  const handleShowReport = handleSingleTouch(() => setShowReport(true));
+  const handleCloseReport = handleSingleTouch(() => setShowReport(false));
 
   // Cleanup on unmount
   useEffect(() => {
@@ -450,6 +494,27 @@ const GeographyGame = memo(() => {
 
   const styles = getResponsiveStyles();
 
+  // Safety check - if mapConfigs is not ready, show loading
+  if (!mapConfigs || !mapConfigs[currentMap]) {
+    return (
+      <ScrollableContainer>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          fontSize: '1.5rem'
+        }}>
+          Loading Geography Game...
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  const currentMapConfig = getCurrentMapConfig();
+
   // Menu Screen
   if (gameState === 'menu') {
     return (
@@ -470,20 +535,21 @@ const GeographyGame = memo(() => {
               marginBottom: '1rem',
               textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
             }}>
-              {texts[language].title}
+              {getText('title')}
             </h1>
             <p style={{
               fontSize: 'clamp(1rem, 3vw, 1.5rem)',
               color: 'rgba(255,255,255,0.9)',
               marginBottom: '2rem'
             }}>
-              {texts[language].subtitle}
+              {getText('subtitle')}
             </p>
             
             {/* Language toggle */}
             <div style={{ marginBottom: '2rem' }}>
               <button
-                onClick={() => setLanguage(language === 'english' ? 'tamil' : 'english')}
+                onClick={handleLanguageToggle}
+                onTouchStart={handleLanguageToggle}
                 style={{
                   background: 'rgba(255,255,255,0.9)',
                   color: '#2d3748',
@@ -498,7 +564,7 @@ const GeographyGame = memo(() => {
                 onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
                 onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
               >
-                {texts[language].language}
+                {getText('language')}
               </button>
             </div>
             
@@ -529,7 +595,8 @@ const GeographyGame = memo(() => {
               {Object.entries(mapConfigs).map(([key, config]) => (
                 <div
                   key={key}
-                  onClick={() => startGame(key)}
+                  onClick={handleStartGame(key)}
+                  onTouchStart={handleStartGame(key)}
                   style={{
                     background: 'rgba(255,255,255,0.9)',
                     borderRadius: '15px',
@@ -553,7 +620,7 @@ const GeographyGame = memo(() => {
                     color: '#2d3748',
                     marginBottom: '15px'
                   }}>
-                    {config.name[language]}
+                    {config?.name?.[safeLanguage] || 'Map'}
                   </h3>
                   <div style={{
                     fontSize: '3rem',
@@ -571,7 +638,7 @@ const GeographyGame = memo(() => {
                     fontWeight: 'bold',
                     width: '100%'
                   }}>
-                    {texts[language].startGame}
+                    {getText('startGame')}
                   </div>
                 </div>
               ))}
@@ -619,7 +686,8 @@ const GeographyGame = memo(() => {
           paddingBottom: '10px'
         }}>
           📊 {texts[language].participationReport}
-        </h2><div style={{ 
+        </h2>
+        <div style={{ 
           marginBottom: '20px', 
           textAlign: 'center',
           fontSize: 'clamp(1rem, 3vw, 1.2rem)'
@@ -742,7 +810,8 @@ const GeographyGame = memo(() => {
         </div>
 
         <button
-          onClick={() => setShowReport(false)}
+          onClick={handleCloseReport}
+          onTouchStart={handleCloseReport}
           style={{
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             color: 'white',
@@ -814,7 +883,8 @@ const GeographyGame = memo(() => {
                   marginBottom: '2rem'
                 }}>
                   <button
-                    onClick={() => setShowReport(true)}
+                    onClick={handleShowReport}
+                    onTouchStart={handleShowReport}
                     style={{
                       background: 'linear-gradient(135deg, #2196F3 0%, #42A5F5 100%)',
                       color: 'white',
@@ -841,7 +911,8 @@ const GeographyGame = memo(() => {
                   alignItems: 'center'
                 }}>
                   <button
-                    onClick={() => startGame(currentMap)}
+                    onClick={handleStartGame(currentMap)}
+                    onTouchStart={handleStartGame(currentMap)}
                     style={{
                       background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
                       color: 'white',
@@ -860,7 +931,8 @@ const GeographyGame = memo(() => {
                     {texts[language].playAgain}
                   </button>
                   <button
-                    onClick={backToLevels}
+                    onClick={handleBackToLevels}
+                    onTouchStart={handleBackToLevels}
                     style={{
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       color: 'white',
@@ -879,7 +951,8 @@ const GeographyGame = memo(() => {
                     {texts[language].backToLevels}
                   </button>
                   <button
-                    onClick={resetGame}
+                    onClick={handleResetGame}
+                    onTouchStart={handleResetGame}
                     style={{
                       background: 'linear-gradient(135deg, #fd79a8 0%, #fdcbf1 100%)',
                       color: 'white',
@@ -909,7 +982,7 @@ const GeographyGame = memo(() => {
   }
 
   // Playing Screen
-  const currentPoint = mapConfigs[currentMap].points[currentQuestionIndex];
+  const currentPoint = currentMapConfig.points[currentQuestionIndex];
 
   return (
     <ScrollableContainer>
@@ -959,18 +1032,19 @@ const GeographyGame = memo(() => {
                   margin: 0,
                   fontWeight: 'bold'
                 }}>
-                  {mapConfigs[currentMap].name[language]}
+                  {currentMapConfig?.name?.[safeLanguage] || 'Map'}
                 </h2>
                 <div style={{
                   fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)',
                   color: '#666',
                   marginTop: '2px'
                 }}>
-                  {texts[language].question} {currentQuestionIndex + 1}/{mapConfigs[currentMap].points.length}
+                  {texts[language].question} {currentQuestionIndex + 1}/{currentMapConfig.points.length}
                 </div>
               </div>
               <button
-                onClick={() => setLanguage(language === 'english' ? 'tamil' : 'english')}
+                onClick={handleLanguageToggle}
+                onTouchStart={handleLanguageToggle}
                 style={{
                   background: 'rgba(255,255,255,0.9)',
                   color: '#2d3748',
@@ -1004,16 +1078,17 @@ const GeographyGame = memo(() => {
                   fontWeight: 'bold',
                   marginBottom: '5px'
                 }}>
-                  {mapConfigs[currentMap].name[language]}
+                  {currentMapConfig?.name?.[safeLanguage] || 'Map'}
                 </h2>
                 <div style={{
                   fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
                   color: 'rgba(255,255,255,0.8)'
                 }}>
-                  {texts[language].question} {currentQuestionIndex + 1}/{mapConfigs[currentMap].points.length}
+                  {texts[language].question} {currentQuestionIndex + 1}/{currentMapConfig.points.length}
                 </div>
                 <button
-                  onClick={() => setLanguage(language === 'english' ? 'tamil' : 'english')}
+                  onClick={handleLanguageToggle}
+                  onTouchStart={handleLanguageToggle}
                   style={{
                     background: 'rgba(255,255,255,0.3)',
                     color: 'white',
@@ -1033,7 +1108,8 @@ const GeographyGame = memo(() => {
 
             {/* Back Button */}
             <button
-              onClick={backToLevels}
+              onClick={handleBackToLevels}
+              onTouchStart={handleBackToLevels}
               style={{
                 background: 'rgba(255,255,255,0.3)',
                 color: 'white',
@@ -1203,7 +1279,7 @@ const GeographyGame = memo(() => {
                 marginBottom: '8px'
               }}>
                 <div style={{
-                  width: `${((currentQuestionIndex) / mapConfigs[currentMap].points.length) * 100}%`,
+                  width: `${((currentQuestionIndex) / currentMapConfig.points.length) * 100}%`,
                   height: '100%',
                   background: '#4CAF50',
                   transition: 'width 0.3s ease'
@@ -1214,7 +1290,7 @@ const GeographyGame = memo(() => {
                 color: 'white',
                 fontWeight: 'bold'
               }}>
-                {currentQuestionIndex}/{mapConfigs[currentMap].points.length}
+                {currentQuestionIndex}/{currentMapConfig.points.length}
               </div>
             </div>
           </div>
@@ -1222,19 +1298,20 @@ const GeographyGame = memo(() => {
           {/* Map Area */}
           <div style={{
             ...styles.mapArea,
-            background: `linear-gradient(135deg, ${mapConfigs[currentMap].bgColor} 0%, rgba(255,255,255,0.1) 100%)`
+            background: `linear-gradient(135deg, ${currentMapConfig.bgColor} 0%, rgba(255,255,255,0.1) 100%)`
           }}>
             <div 
               ref={mapElementRef}
-              onClick={handleMapClick}
-              onTouchStart={handleTouchStart}
+              onClick={handleMapInteraction}
+              onTouchStart={handleMapInteraction}
               style={{
                 ...styles.mapDisplay,
-                backgroundImage: mapConfigs[currentMap].bgImage,
+                backgroundImage: currentMapConfig.bgImage,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
-                position: 'relative'
+                position: 'relative',
+                touchAction: 'manipulation'
               }}
             >
               {/* Placed Markers */}
