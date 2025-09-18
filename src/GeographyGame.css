@@ -96,7 +96,7 @@
 .map-title {
   font-size: 1.3rem;
   font-weight: bold;
-  color: white;
+  color: black;
   margin-bottom: 15px;
 }
 
@@ -134,7 +134,7 @@
 }
 
 .game-header {
-  background: rgba(255,255,255,0.95);
+  background: rgba(247, 68, 68, 0.95);
   padding: 15px 20px;
   display: flex;
   justify-content: center;

@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback, memo } from 'react';
-import './GeographyGame.css';
-import LazyImage from './LazyImage';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+//import './GeographyGame.css';
 import TamilNaduMap from './assets/TamilNaduMap.png';
 import IndiaMap from './assets/IndiaMap.png';
 import IndianRiverMap from './assets/IndianRiverMap.png';
@@ -26,8 +25,8 @@ const indiaPoints = [
   { name: "TamilNadu", tamil: "தமிழ்நாடு", top: "83%", left: "44%" },
   { name: "WestBengal", tamil: "மேற்கு வங்காளம்", top: "48%", left: "60%" },
   { name: "Karnataka", tamil: "கர்நாடகா", top: "72%", left: "39%" },
-  { name: "Telangana", tamil: "தெலங்கானா", top: "65%", left: "45%" },
-  { name: "Rajasthan", tamil: "ராஜஸ்தான்", top: "39%", left: "37%" },
+  { name: "Telgana", tamil: "தெலங்கானா", top: "65%", left: "45%" },
+  { name: "Rajastan", tamil: "ராஜஸ்தான்", top: "39%", left: "37%" },
   { name: "Goa", tamil: "கோவா", top: "70%", left: "36%" }
 ];
 
@@ -51,7 +50,7 @@ const worldPoints = [
   { name: "Egypt", tamil: "எகிப்து", top: "48%", left: "48%" }
 ];
 
-const GeographyGame = memo(() => {
+const GeographyGame = () => {
   const { user, saveScore } = useUser();
   const [currentMap, setCurrentMap] = useState('india');
   const [language, setLanguage] = useState('english');
@@ -103,6 +102,10 @@ const GeographyGame = memo(() => {
       bgColor: "#89f7fe"
     }
   }), []);
+  // Safe getter for current map config
+const getCurrentMapConfig = useCallback(() => {
+  return mapConfigs[currentMap] || mapConfigs.india;
+}, [mapConfigs, currentMap]);
 
   const texts = useMemo(() => ({
     english: {
@@ -201,16 +204,6 @@ const GeographyGame = memo(() => {
     }
   }), []);
 
-  // Add safety check for current map config
-  const getCurrentMapConfig = useCallback(() => {
-    const config = mapConfigs[currentMap];
-    if (!config) {
-      console.warn(`Map config not found for: ${currentMap}, falling back to india`);
-      return mapConfigs.india;
-    }
-    return config;
-  }, [mapConfigs, currentMap]);
-
   // Optimized notification system
   const showNotification = useCallback((message, type = 'info') => {
     setNotification({ message, type });
@@ -225,22 +218,24 @@ const GeographyGame = memo(() => {
   }, []);
 
   // Simplified start game function
-  const startGame = useCallback((mapKey) => {
-    // Validate map key exists
-    if (!mapConfigs[mapKey]) {
-      console.error(`Invalid map key: ${mapKey}`);
-      return;
-    }
-    
-    setCurrentMap(mapKey);
-    setGameState('playing');
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setTimeLeft(40);
-    setPlacedMarkers([]);
-    setGameResults([]);
-    startTimer();
-  }, [mapConfigs]);
+ const startGame = useCallback((mapKey) => {
+  // Validate map key
+  if (!mapConfigs[mapKey]) {
+    console.warn(`Invalid map key: ${mapKey}, defaulting to india`);
+    mapKey = 'india';
+  }
+  
+  setCurrentMap(mapKey);
+  setGameState('playing');
+  setCurrentQuestionIndex(0);
+  setScore(0);
+  setTimeLeft(40);
+  setPlacedMarkers([]);
+  setGameResults([]);
+  
+  // Start timer after state updates
+  setTimeout(() => startTimer(), 100);
+}, [mapConfigs]);
 
   // Timer functions
   const startTimer = useCallback(() => {
@@ -266,36 +261,42 @@ const GeographyGame = memo(() => {
   }, []);
 
   const timeUp = useCallback(() => {
-    stopTimer();
-    const mapConfig = getCurrentMapConfig();
-    const currentPoint = mapConfig.points[currentQuestionIndex];
-    
-    // Record the result as incorrect
+  stopTimer();
+  const currentMapConfig = getCurrentMapConfig();
+  const currentPoint = currentMapConfig.points[currentQuestionIndex];
+  
+  // Add safety check for currentPoint
+  if (currentPoint) {
     setGameResults(prev => [...prev, {
       question: currentPoint[language] || currentPoint.name,
       correct: false,
       timeTaken: 40
     }]);
-
     showNotification(texts[language].incorrect, 'error');
+  }
     
     setTimeout(() => {
       nextQuestion();
     }, 1000); // Reduced timeout
-  }, [currentQuestionIndex, language, getCurrentMapConfig, texts, stopTimer, showNotification]);
+  }, [currentMap, currentQuestionIndex, language, mapConfigs, texts, stopTimer, showNotification]);
 
   // Optimized check answer function
   const checkAnswer = useCallback((clickX, clickY) => {
-    const mapConfig = getCurrentMapConfig();
-    const currentPoint = mapConfig.points[currentQuestionIndex];
-    
-    // Get map element using ref for better performance
-    const mapElement = mapElementRef.current;
-    if (!mapElement) return;
-    
-    const rect = mapElement.getBoundingClientRect();
-    const targetX = (parseFloat(currentPoint.left) / 100) * rect.width;
-    const targetY = (parseFloat(currentPoint.top) / 100) * rect.height;
+  const currentMapConfig = getCurrentMapConfig();
+  const currentPoint = currentMapConfig.points[currentQuestionIndex];
+  
+  // Add comprehensive safety checks
+  if (!currentPoint || !currentPoint.left || !currentPoint.top) {
+    console.warn('Invalid currentPoint:', currentPoint, 'at index:', currentQuestionIndex);
+    return;
+  }
+  
+  const mapElement = mapElementRef.current;
+  if (!mapElement) return;
+  
+  const rect = mapElement.getBoundingClientRect();
+  const targetX = (parseFloat(currentPoint.left) / 100) * rect.width;
+  const targetY = (parseFloat(currentPoint.top) / 100) * rect.height;
     
     // Calculate distance with tolerance
     const distance = Math.sqrt(
@@ -335,21 +336,27 @@ const GeographyGame = memo(() => {
     setTimeout(() => {
       nextQuestion();
     }, 1000); // Reduced timeout
-  }, [currentQuestionIndex, timeLeft, getCurrentMapConfig, language, texts, showNotification, stopTimer]);
+  }, [currentMap, currentQuestionIndex, timeLeft, mapConfigs, language, texts, showNotification, stopTimer]);
 
   // Next question function
   const nextQuestion = useCallback(() => {
-    const mapConfig = getCurrentMapConfig();
-    const totalQuestions = mapConfig.points.length;
-    
-    if (currentQuestionIndex + 1 >= totalQuestions) {
-      endGame();
-    } else {
-      setCurrentQuestionIndex(prev => prev + 1);
+  const currentMapConfig = getCurrentMapConfig();
+  const totalQuestions = currentMapConfig.points.length;
+  
+  if (currentQuestionIndex + 1 >= totalQuestions) {
+    endGame();
+  } else {
+    const nextIndex = currentQuestionIndex + 1;
+    // Ensure the next question exists
+    if (nextIndex < currentMapConfig.points.length && currentMapConfig.points[nextIndex]) {
+      setCurrentQuestionIndex(nextIndex);
       setTimeLeft(40);
       startTimer();
+    } else {
+      endGame();
     }
-  }, [currentQuestionIndex, getCurrentMapConfig, startTimer]);
+  }
+}, [currentQuestionIndex, getCurrentMapConfig, startTimer]);
 
   // End game function
   const endGame = useCallback(() => {
@@ -468,27 +475,6 @@ const GeographyGame = memo(() => {
   };
 
   const styles = getResponsiveStyles();
-
-  // Safety check - if mapConfigs is not ready, show loading
-  if (!mapConfigs || !mapConfigs[currentMap]) {
-    return (
-      <ScrollableContainer>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          fontSize: '1.5rem'
-        }}>
-          Loading Geography Game...
-        </div>
-      </ScrollableContainer>
-    );
-  }
-
-  const currentMapConfig = getCurrentMapConfig();
 
   // Menu Screen
   if (gameState === 'menu') {
@@ -659,8 +645,7 @@ const GeographyGame = memo(() => {
           paddingBottom: '10px'
         }}>
           📊 {texts[language].participationReport}
-        </h2>
-        <div style={{ 
+        </h2><div style={{ 
           marginBottom: '20px', 
           textAlign: 'center',
           fontSize: 'clamp(1rem, 3vw, 1.2rem)'
@@ -950,8 +935,14 @@ const GeographyGame = memo(() => {
   }
 
   // Playing Screen
-  const currentPoint = currentMapConfig.points[currentQuestionIndex];
-
+  // Get current map config safely
+// Get current map config safely
+const currentMapConfig = getCurrentMapConfig();
+const currentPoint = (currentMapConfig.points && currentMapConfig.points[currentQuestionIndex]) 
+  ? currentMapConfig.points[currentQuestionIndex] 
+  : (currentMapConfig.points && currentMapConfig.points[0]) 
+  ? currentMapConfig.points[0] 
+  : { name: "Loading...", tamil: "ஏற்றுகிறது...", left: "50%", top: "50%" };
   return (
     <ScrollableContainer>
       <div style={styles.container}>
@@ -1000,7 +991,7 @@ const GeographyGame = memo(() => {
                   margin: 0,
                   fontWeight: 'bold'
                 }}>
-                  {currentMapConfig.name[language]}
+                 {currentMapConfig.name[language]}
                 </h2>
                 <div style={{
                   fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)',
@@ -1204,7 +1195,7 @@ const GeographyGame = memo(() => {
                 border: '2px solid rgba(255,255,255,0.4)',
                 userSelect: 'none'
               }}>
-                🎯 {currentPoint[language] || currentPoint.name}
+                🎯 {currentPoint ? (currentPoint[language] || currentPoint.name) : "Loading..."}
               </div>
               
               <div style={{
@@ -1244,7 +1235,7 @@ const GeographyGame = memo(() => {
                 marginBottom: '8px'
               }}>
                 <div style={{
-                  width: `${((currentQuestionIndex) / currentMapConfig.points.length) * 100}%`,
+                  width: `${((currentQuestionIndex) / mapConfigs[currentMap].points.length) * 100}%`,
                   height: '100%',
                   background: '#4CAF50',
                   transition: 'width 0.3s ease'
@@ -1304,6 +1295,6 @@ const GeographyGame = memo(() => {
       </div>
     </ScrollableContainer>
   );
-});
+};
 
 export default GeographyGame;
