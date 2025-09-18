@@ -29,6 +29,8 @@ const indiaPoints = [
   { name: "Karnataka", tamil: "கர்நாடகா", top: "72%", left: "39%" },
   { name: "Telangana", tamil: "தெலங்கானா", top: "65%", left: "45%" },
   { name: "Rajasthan", tamil: "ராஜஸ்தான்", top: "39%", left: "37%" },
+  { name: "Telangana", tamil: "தெலங்கானா", top: "65%", left: "45%" },
+  { name: "Rajasthan", tamil: "ராஜஸ்தான்", top: "39%", left: "37%" },
   { name: "Goa", tamil: "கோவா", top: "70%", left: "36%" }
 ];
 
@@ -90,11 +92,13 @@ const GeographyGame = memo(() => {
       name: { english: "Tamil Nadu Map", tamil: "தமிழ்நாடு வரைபடம்" },
       points: tamilNaduPoints,
       bgImage: `url(${TamilNaduMap})`,
+      bgImage: `url(${TamilNaduMap})`,
       bgColor: "#ff9a9e"
     },
     india: {
       name: { english: "India Map", tamil: "இந்தியா வரைபடம்" },
       points: indiaPoints,
+      bgImage: `url(${IndiaMap})`,
       bgImage: `url(${IndiaMap})`,
       bgColor: "#a8edea"
     },
@@ -102,11 +106,13 @@ const GeographyGame = memo(() => {
       name: { english: "Indian Rivers Map", tamil: "இந்திய நதிகள் வரைபடம்" },
       points: riverPoints,
       bgImage: `url(${IndianRiverMap})`,
+      bgImage: `url(${IndianRiverMap})`,
       bgColor: "#d299c2"
     },
     world: {
       name: { english: "World Map", tamil: "உலக வரைபடம்" },
       points: worldPoints,
+      bgImage: `url(${WorldMap})`,
       bgImage: `url(${WorldMap})`,
       bgColor: "#89f7fe"
     }
@@ -249,6 +255,12 @@ const GeographyGame = memo(() => {
       return;
     }
     
+    // Validate map key exists
+    if (!mapConfigs[mapKey]) {
+      console.error(`Invalid map key: ${mapKey}`);
+      return;
+    }
+    
     setCurrentMap(mapKey);
     setGameState('playing');
     setCurrentQuestionIndex(0);
@@ -257,6 +269,7 @@ const GeographyGame = memo(() => {
     setPlacedMarkers([]);
     setGameResults([]);
     startTimer();
+  }, [mapConfigs]);
   }, [mapConfigs]);
 
   // Timer functions
@@ -286,6 +299,8 @@ const GeographyGame = memo(() => {
     stopTimer();
     const mapConfig = getCurrentMapConfig();
     const currentPoint = mapConfig.points[currentQuestionIndex];
+    const mapConfig = getCurrentMapConfig();
+    const currentPoint = mapConfig.points[currentQuestionIndex];
     
     // Record the result as incorrect
     setGameResults(prev => [...prev, {
@@ -300,9 +315,12 @@ const GeographyGame = memo(() => {
       nextQuestion();
     }, 1000); // Reduced timeout
   }, [currentQuestionIndex, language, getCurrentMapConfig, texts, stopTimer, showNotification]);
+  }, [currentQuestionIndex, language, getCurrentMapConfig, texts, stopTimer, showNotification]);
 
   // Optimized check answer function
   const checkAnswer = useCallback((clickX, clickY) => {
+    const mapConfig = getCurrentMapConfig();
+    const currentPoint = mapConfig.points[currentQuestionIndex];
     const mapConfig = getCurrentMapConfig();
     const currentPoint = mapConfig.points[currentQuestionIndex];
     
@@ -353,9 +371,12 @@ const GeographyGame = memo(() => {
       nextQuestion();
     }, 1000); // Reduced timeout
   }, [currentQuestionIndex, timeLeft, getCurrentMapConfig, language, texts, showNotification, stopTimer]);
+  }, [currentQuestionIndex, timeLeft, getCurrentMapConfig, language, texts, showNotification, stopTimer]);
 
   // Next question function
   const nextQuestion = useCallback(() => {
+    const mapConfig = getCurrentMapConfig();
+    const totalQuestions = mapConfig.points.length;
     const mapConfig = getCurrentMapConfig();
     const totalQuestions = mapConfig.points.length;
     
@@ -366,6 +387,7 @@ const GeographyGame = memo(() => {
       setTimeLeft(40);
       startTimer();
     }
+  }, [currentQuestionIndex, getCurrentMapConfig, startTimer]);
   }, [currentQuestionIndex, getCurrentMapConfig, startTimer]);
 
   // End game function
@@ -493,6 +515,27 @@ const GeographyGame = memo(() => {
   };
 
   const styles = getResponsiveStyles();
+
+  // Safety check - if mapConfigs is not ready, show loading
+  if (!mapConfigs || !mapConfigs[currentMap]) {
+    return (
+      <ScrollableContainer>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          fontSize: '1.5rem'
+        }}>
+          Loading Geography Game...
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  const currentMapConfig = getCurrentMapConfig();
 
   // Safety check - if mapConfigs is not ready, show loading
   if (!mapConfigs || !mapConfigs[currentMap]) {
@@ -686,6 +729,8 @@ const GeographyGame = memo(() => {
           paddingBottom: '10px'
         }}>
           📊 {texts[language].participationReport}
+        </h2>
+        <div style={{ 
         </h2>
         <div style={{ 
           marginBottom: '20px', 
@@ -983,6 +1028,7 @@ const GeographyGame = memo(() => {
 
   // Playing Screen
   const currentPoint = currentMapConfig.points[currentQuestionIndex];
+  const currentPoint = currentMapConfig.points[currentQuestionIndex];
 
   return (
     <ScrollableContainer>
@@ -1040,6 +1086,7 @@ const GeographyGame = memo(() => {
                   marginTop: '2px'
                 }}>
                   {texts[language].question} {currentQuestionIndex + 1}/{currentMapConfig.points.length}
+                  {texts[language].question} {currentQuestionIndex + 1}/{currentMapConfig.points.length}
                 </div>
               </div>
               <button
@@ -1084,6 +1131,7 @@ const GeographyGame = memo(() => {
                   fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
                   color: 'rgba(255,255,255,0.8)'
                 }}>
+                  {texts[language].question} {currentQuestionIndex + 1}/{currentMapConfig.points.length}
                   {texts[language].question} {currentQuestionIndex + 1}/{currentMapConfig.points.length}
                 </div>
                 <button
@@ -1280,6 +1328,7 @@ const GeographyGame = memo(() => {
               }}>
                 <div style={{
                   width: `${((currentQuestionIndex) / currentMapConfig.points.length) * 100}%`,
+                  width: `${((currentQuestionIndex) / currentMapConfig.points.length) * 100}%`,
                   height: '100%',
                   background: '#4CAF50',
                   transition: 'width 0.3s ease'
@@ -1291,6 +1340,7 @@ const GeographyGame = memo(() => {
                 fontWeight: 'bold'
               }}>
                 {currentQuestionIndex}/{currentMapConfig.points.length}
+                {currentQuestionIndex}/{currentMapConfig.points.length}
               </div>
             </div>
           </div>
@@ -1299,6 +1349,7 @@ const GeographyGame = memo(() => {
           <div style={{
             ...styles.mapArea,
             background: `linear-gradient(135deg, ${currentMapConfig.bgColor} 0%, rgba(255,255,255,0.1) 100%)`
+            background: `linear-gradient(135deg, ${currentMapConfig.bgColor} 0%, rgba(255,255,255,0.1) 100%)`
           }}>
             <div 
               ref={mapElementRef}
@@ -1306,6 +1357,7 @@ const GeographyGame = memo(() => {
               onTouchStart={handleMapInteraction}
               style={{
                 ...styles.mapDisplay,
+                backgroundImage: currentMapConfig.bgImage,
                 backgroundImage: currentMapConfig.bgImage,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
